@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model applications {
+  id             String                   @id(map: "PK_938c0a27255637bde919591888f") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  coverLetter    String?
+  resumeFilename String?                  @db.VarChar
+  resumeUrl      String?                  @db.VarChar
+  status         applications_status_enum @default(pending)
+  notes          String?
+  createdAt      DateTime                 @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime                 @default(now()) @db.Timestamp(6)
+  applicantId    String?                  @db.Uuid
+  jobId          String?                  @db.Uuid
+  users          users?                   @relation(fields: [applicantId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_909867e55cc94e350ae38383cb5")
+  jobs           jobs?                    @relation(fields: [jobId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f6ebb8bc5061068e4dd97df3c77")
+}
+
+model jobs {
+  id           String         @id(map: "PK_cf0a6c42b72fcc7f7c237def345") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title        String         @db.VarChar
+  description  String
+  location     String?        @db.VarChar
+  salary       String?        @db.VarChar
+  createdAt    DateTime       @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime       @default(now()) @db.Timestamp(6)
+  employerId   String?        @db.Uuid
+  applications applications[]
+  users        users?         @relation(fields: [employerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_62e3afafda3cf7db0a08982a5b1")
+}
+
+model users {
+  id           String          @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email        String          @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
+  password     String          @db.VarChar
+  firstName    String          @db.VarChar
+  lastName     String          @db.VarChar
+  role         users_role_enum @default(job_seeker)
+  company      String?         @db.VarChar
+  bio          String?
+  skills       String?
+  experience   String?         @db.VarChar
+  createdAt    DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime        @default(now()) @db.Timestamp(6)
+  applications applications[]
+  jobs         jobs[]
+}
+
+enum applications_status_enum {
+  pending
+  reviewed
+  shortlisted
+  rejected
+  hired
+}
+
+enum users_role_enum {
+  job_seeker
+  employer
+  admin
+}
