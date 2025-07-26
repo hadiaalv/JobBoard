@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Application } from '../../applications/entities/application.entity';
@@ -21,16 +22,49 @@ export class Job {
   @Column('text')
   description: string;
 
+  @Column()
+  company: string;
+
   @Column({ nullable: true })
   location?: string;
 
+  @Column('int', { nullable: true })
+  salaryMin?: number;
+
+  @Column('int', { nullable: true })
+  salaryMax?: number;
+
+  @Column({ 
+    type: 'enum', 
+    enum: ['full_time', 'part_time', 'contract', 'internship', 'freelance'],
+    default: 'full_time'
+  })
+  type: string;
+
+  @Column({ 
+    type: 'enum', 
+    enum: ['entry', 'mid', 'senior', 'lead', 'executive'],
+    default: 'mid'
+  })
+  experienceLevel: string;
+
+  @Column('simple-array', { nullable: true })
+  skills?: string[];
+
+  @Column('simple-array', { nullable: true })
+  benefits?: string[];
+
   @Column({ nullable: true })
-  salary?: string;
+  applicationDeadline?: Date;
 
-  @ManyToOne(() => User, (user) => user.jobs, { eager: true }) // 👈 This is key
-  employer: User;
+  @Column({ default: true })
+  isActive: boolean;
 
-  @OneToMany(() => Application, application => application.job)
+  @ManyToOne(() => User, (user) => user.jobs, { eager: true })
+  @JoinColumn({ name: 'postedBy' })
+  postedBy: User;
+
+  @OneToMany(() => Application, (application) => application.job)
   applications: Application[];
 
   @CreateDateColumn()

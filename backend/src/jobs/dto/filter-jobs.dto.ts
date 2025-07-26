@@ -6,12 +6,21 @@ export enum JobType {
   PART_TIME = 'part_time',
   CONTRACT = 'contract',
   INTERNSHIP = 'internship',
+  FREELANCE = 'freelance',
+}
+
+export enum ExperienceLevel {
+  ENTRY = 'entry',
+  MID = 'mid',
+  SENIOR = 'senior',
+  LEAD = 'lead',
+  EXECUTIVE = 'executive',
 }
 
 export class FilterJobsDto {
   @IsOptional()
   @IsString()
-  title?: string;
+  search?: string;
 
   @IsOptional()
   @IsString()
@@ -22,20 +31,22 @@ export class FilterJobsDto {
   type?: JobType;
 
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  @Min(0)
-  minSalary?: number;
+  @IsEnum(ExperienceLevel)
+  experienceLevel?: ExperienceLevel;
 
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   @Min(0)
-  maxSalary?: number;
+  salaryMin?: number;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  @Transform(({ value }) => Array.isArray(value) ? value : [value])
-  skills?: string[];
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  salaryMax?: number;
+
+  @IsOptional()
+  @IsString()
+  company?: string;
 }

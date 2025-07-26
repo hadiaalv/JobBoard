@@ -53,7 +53,13 @@ export class User {
   @Column({ nullable: true })
   experience?: string;
 
-  @OneToMany(() => Job, (job) => job.employer, { cascade: true })
+  @Column({ nullable: true })
+  avatar?: string;
+
+  @Column({ nullable: true })
+  resume?: string;
+
+  @OneToMany(() => Job, (job) => job.postedBy, { cascade: true })
   jobs: Job[];
 
   @OneToMany(() => Application, (application) => application.applicant, { cascade: true })

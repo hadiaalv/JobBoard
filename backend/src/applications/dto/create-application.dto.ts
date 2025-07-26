@@ -1,10 +1,12 @@
-import { IsString, IsOptional, MaxLength } from 'class-validator';
+import { IsString, IsOptional, MaxLength, IsUUID, IsNotEmpty } from 'class-validator';
 
 export class CreateApplicationDto {
+  @IsNotEmpty()
   @IsString()
-  @MaxLength(255)
+  jobId: string;
+
+  @IsString()
+  @MaxLength(2000)
   @IsOptional()
   coverLetter?: string;
-
-  // Add other properties as needed
 } 

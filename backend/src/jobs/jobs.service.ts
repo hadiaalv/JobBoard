@@ -9,7 +9,7 @@ import { Job } from './entities/job.entity';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { FilterJobsDto } from './dto/filter-jobs.dto';
-import { User } from '../auth/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class JobsService {
@@ -21,7 +21,7 @@ export class JobsService {
   async create(createJobDto: CreateJobDto, user: User) {
     const job = this.jobRepository.create({
       ...createJobDto,
-      employer: user,
+      postedBy: user,
     });
     return this.jobRepository.save(job);
   }
@@ -29,19 +29,24 @@ export class JobsService {
   async findAll(filterDto: FilterJobsDto): Promise<Job[]> {
     const query = this.jobRepository
       .createQueryBuilder('job')
-      .leftJoinAndSelect('job.employer', 'employer');
+      .leftJoinAndSelect('job.postedBy', 'postedBy')
+      .where('job.isActive = :isActive', { isActive: true });
 
     const {
-      title,
+      search,
       location,
       type,
-      minSalary,
-      maxSalary,
-      skills,
+      experienceLevel,
+      salaryMin,
+      salaryMax,
+      company,
     } = filterDto;
 
-    if (title) {
-      query.andWhere('job.title ILIKE :title', { title: `%${title}%` });
+    if (search) {
+      query.andWhere(
+        '(job.title ILIKE :search OR job.description ILIKE :search OR job.company ILIKE :search)',
+        { search: `%${search}%` }
+      );
     }
 
     if (location) {
@@ -52,33 +57,37 @@ export class JobsService {
       query.andWhere('job.type = :type', { type });
     }
 
-    if (minSalary) {
-      query.andWhere('job.salary >= :minSalary', { minSalary });
+    if (experienceLevel) {
+      query.andWhere('job.experienceLevel = :experienceLevel', { experienceLevel });
     }
 
-    if (maxSalary) {
-      query.andWhere('job.salary <= :maxSalary', { maxSalary });
+    if (salaryMin) {
+      query.andWhere('job.salaryMin >= :salaryMin', { salaryMin });
     }
 
-    if (skills && skills.length > 0) {
-      // PostgreSQL array overlap operator (&&) requires casting to text[]
-      query.andWhere('job.requiredSkills && :skills::text[]', { skills });
+    if (salaryMax) {
+      query.andWhere('job.salaryMax <= :salaryMax', { salaryMax });
     }
 
-    return query.getMany();
+    if (company) {
+      query.andWhere('job.company ILIKE :company', { company: `%${company}%` });
+    }
+
+    return query.orderBy('job.createdAt', 'DESC').getMany();
   }
 
   async findByEmployer(employerId: string): Promise<Job[]> {
     return this.jobRepository.find({
-      where: { employer: { id: employerId } },
-      relations: ['applications'],
+      where: { postedBy: { id: employerId } },
+      relations: ['applications', 'applications.applicant'],
+      order: { createdAt: 'DESC' },
     });
   }
 
   async findOne(id: string): Promise<Job> {
     const job = await this.jobRepository.findOne({
       where: { id },
-      relations: ['employer'],
+      relations: ['postedBy', 'applications', 'applications.applicant'],
     });
 
     if (!job) {
@@ -91,7 +100,7 @@ export class JobsService {
   async update(id: string, updateJobDto: UpdateJobDto, user: User): Promise<Job> {
     const job = await this.findOne(id);
 
-    if (job.employer.id !== user.id) {
+    if (job.postedBy.id !== user.id) {
       throw new ForbiddenException('You can only update your own jobs');
     }
 
@@ -102,7 +111,7 @@ export class JobsService {
   async remove(id: string, user: User): Promise<{ message: string }> {
     const job = await this.findOne(id);
 
-    if (job.employer.id !== user.id) {
+    if (job.postedBy.id !== user.id) {
       throw new ForbiddenException('You can only delete your own jobs');
     }
 

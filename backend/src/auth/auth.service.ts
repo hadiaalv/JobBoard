@@ -26,8 +26,10 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { sub: user.id, email: user.email, role: user.role };
+    const token = this.jwtService.sign(payload);
     return {
-      access_token: this.jwtService.sign(payload),
+      token,
+      access_token: token, // Keep both for compatibility
       user,
     };
   }
@@ -38,6 +40,8 @@ export class AuthService {
       ...registerDto,
       password: hashedPassword,
     });
-    return user;
+    
+    // Return the same format as login for consistency
+    return this.login(user);
   }
 }
