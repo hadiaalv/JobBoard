@@ -68,7 +68,11 @@ export class UsersService {
   }
 
   async create(userData: Partial<User>) {
+    console.log('UsersService: Creating user with data:', { ...userData, password: '[HIDDEN]' });
     const user = this.userRepository.create(userData);
-    return this.userRepository.save(user);
+    console.log('UsersService: User entity created:', { id: user.id, email: user.email });
+    const savedUser = await this.userRepository.save(user);
+    console.log('UsersService: User saved to database with ID:', savedUser.id);
+    return savedUser;
   }
 }

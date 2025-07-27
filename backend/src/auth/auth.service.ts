@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -14,10 +14,20 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
-    if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
+    if (!user) {
+      console.error('User not found for email:', email);
+      return null;
     }
-    return null;
+    if (!user.password) {
+      console.error('User found but password is missing:', user);
+      return null;
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      console.error('Password mismatch for user:', email);
+      return null;
+    }
+    return user;
   }
 
   async validateUserById(id: string): Promise<User | null> {
@@ -35,13 +45,20 @@ export class AuthService {
   }
 
   async register(registerDto: RegisterDto) {
-    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    const user = await this.usersService.create({
-      ...registerDto,
-      password: hashedPassword,
-    });
-    
-    // Return the same format as login for consistency
-    return this.login(user);
+    try {
+      const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+      const user = await this.usersService.create({
+        ...registerDto,
+        password: hashedPassword,
+      });
+      
+      // Return the same format as login for consistency
+      return this.login(user);
+    } catch (error) {
+      if (error.code === '23505' && error.constraint?.includes('email')) {
+        throw new ConflictException('Email already exists. Please use a different email address.');
+      }
+      throw error;
+    }
   }
 }

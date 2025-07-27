@@ -17,7 +17,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Serve static files from uploads directory
+  // Serve static files from uploads directory (before setting global prefix)
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
