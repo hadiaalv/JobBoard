@@ -232,44 +232,85 @@ export default function HomePage() {
       </section>
 
       <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">JobBoard</h3>
-              <p className="text-gray-400">
-                Connecting talent with opportunity. Find your next career move with us.
-              </p>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid md:grid-cols-4 gap-8">
+              <div>
+                <h3 className="text-2xl font-bold mb-4">JobBoard</h3>
+                <p className="text-gray-400">
+                  Connecting talent with opportunity. Find your next career move with us.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-4">For Job Seekers</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/jobs" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Browse Jobs
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/auth/register" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Create Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/dashboard" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Dashboard
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-4">For Employers</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/jobs/create" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Post a Job
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/auth/register" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Employer Signup
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/dashboard" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Manage Jobs
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="font-semibold mb-4">Support</h4>
+                <ul className="space-y-2">
+                  <li>
+                    <a href="#" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Help Center
+                    </a>
+                  </li>
+                  <li>
+                    <Link href="/contact-us" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Contact Us
+                    </Link>
+                  </li>
+                  <li>
+                    <a href="#" className="text-white hover:text-blue-500 transition-colors duration-200">
+                      Privacy Policy
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div>
-              <h4 className="font-semibold mb-4">For Job Seekers</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/jobs" className="hover:text-blue-500">Browse Jobs</Link></li>
-                <li><Link href="/auth/register" className="hover:text-blue-500">Create Profile</Link></li>
-                <li><Link href="/dashboard" className="hover:text-blue-500">Dashboard</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">For Employers</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link href="/jobs/create" className="hover:text-blue-500">Post a Job</Link></li>
-                <li><Link href="/auth/register" className="hover:text-blue-500">Employer Signup</Link></li>
-                <li><Link href="/dashboard" className="hover:text-blue-500">Manage Jobs</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-blue-500">Help Center</a></li>
-                <li><Link href="/contact-us" className="hover:text-blue-500">Contact Us</Link></li>
-                <li><a href="#" className="hover:text-blue-500">Privacy Policy</a></li>
-              </ul>
+
+            <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+              <p>&copy; 2024 JobBoard. All rights reserved.</p>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 JobBoard. All rights reserved.</p>
-          </div>
-        </div>
       </footer>
+
 
     </>
   )
