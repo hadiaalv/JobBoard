@@ -4,19 +4,23 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import api from "@/lib/api";
-import { getFileUrl, getDownloadUrl } from "@/lib/utils";
 import { Application } from "@/types";
-import { Building, MapPin, DollarSign, Calendar, FileText, Eye, Clock, CheckCircle, XCircle, User } from "lucide-react";
+import { Building, MapPin, DollarSign, Calendar, Clock, Eye, CheckCircle, XCircle } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+
 export default function ApplicationsPage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuthStore();
+  const { user, isAuthenticated, initializeAuth } = useAuthStore();
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -24,13 +28,8 @@ export default function ApplicationsPage() {
       return;
     }
 
-    if (user?.role !== "job_seeker") {
-      router.push("/dashboard");
-      return;
-    }
-
     fetchApplications();
-  }, [isAuthenticated, user, router]);
+  }, [isAuthenticated, router]);
 
   const fetchApplications = async () => {
     try {
@@ -48,17 +47,17 @@ export default function ApplicationsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200";
       case "reviewed":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200";
       case "shortlisted":
-        return "bg-purple-100 text-purple-800";
+        return "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200";
       case "hired":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200";
       case "rejected":
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200";
     }
   };
 
@@ -100,102 +99,68 @@ export default function ApplicationsPage() {
     return null;
   }
 
-  if (user?.role !== "job_seeker") {
-    return (
-      <div className="max-w-4xl mx-auto py-12 px-4">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Access Denied</h2>
-          <p className="text-gray-600 mb-6">Only job seekers can access this page.</p>
-          <Button asChild>
-            <Link href="/dashboard">Back to Dashboard</Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   if (loading) {
     return (
       <div className="max-w-6xl mx-auto py-12 px-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading your applications...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">Loading applications...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <>
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
-          <p className="text-gray-600 mt-2">
-            Track the status of your job applications
-          </p>
-        </div>
-        <Button asChild>
-          <Link href="/jobs">Browse More Jobs</Link>
-        </Button>
+    <div className="max-w-6xl mx-auto py-12 px-4">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">My Applications</h1>
+        <p className="text-gray-600 dark:text-gray-300">
+          Track the status of your job applications
+        </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">Total</div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.pending}</div>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pending}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">Pending</div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Shortlisted</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.shortlisted}</div>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{stats.shortlisted}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">Shortlisted</div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Hired</CardTitle>
-            <User className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.hired}</div>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{stats.hired}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">Hired</div>
           </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Rejected</CardTitle>
-            <XCircle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.rejected}</div>
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+          <CardContent className="p-4 text-center">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{stats.rejected}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">Rejected</div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filter */}
+      {/* Filters */}
       <div className="mb-6">
         <div className="flex flex-wrap gap-2">
           <Button
             variant={filter === "all" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("all")}
+            className={filter === "all" ? "bg-blue-600 hover:bg-blue-700 text-white" : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"}
           >
             All ({stats.total})
           </Button>
@@ -203,6 +168,7 @@ export default function ApplicationsPage() {
             variant={filter === "pending" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("pending")}
+            className={filter === "pending" ? "bg-yellow-600 hover:bg-yellow-700 text-white" : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"}
           >
             Pending ({stats.pending})
           </Button>
@@ -210,6 +176,7 @@ export default function ApplicationsPage() {
             variant={filter === "shortlisted" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("shortlisted")}
+            className={filter === "shortlisted" ? "bg-purple-600 hover:bg-purple-700 text-white" : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"}
           >
             Shortlisted ({stats.shortlisted})
           </Button>
@@ -217,6 +184,7 @@ export default function ApplicationsPage() {
             variant={filter === "hired" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("hired")}
+            className={filter === "hired" ? "bg-green-600 hover:bg-green-700 text-white" : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"}
           >
             Hired ({stats.hired})
           </Button>
@@ -224,6 +192,7 @@ export default function ApplicationsPage() {
             variant={filter === "rejected" ? "default" : "outline"}
             size="sm"
             onClick={() => setFilter("rejected")}
+            className={filter === "rejected" ? "bg-red-600 hover:bg-red-700 text-white" : "border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"}
           >
             Rejected ({stats.rejected})
           </Button>
@@ -232,16 +201,12 @@ export default function ApplicationsPage() {
 
       {/* Applications List */}
       {filteredApplications.length === 0 ? (
-        <Card>
-          <CardContent className="text-center py-12">
-            <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              {filter === "all" ? "No applications yet" : `No ${filter} applications`}
-            </h3>
-            <p className="text-gray-600 mb-6">
+        <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+          <CardContent className="p-8 text-center">
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               {filter === "all" 
-                ? "Start applying to jobs to track your applications here."
-                : `You don't have any ${filter} applications at the moment.`
+                ? "You haven't applied to any jobs yet." 
+                : `No ${filter} applications found.`
               }
             </p>
             {filter === "all" && (
@@ -254,12 +219,12 @@ export default function ApplicationsPage() {
       ) : (
         <div className="space-y-6">
           {filteredApplications.map((application) => (
-            <Card key={application.id} className="hover:shadow-md transition-shadow">
+            <Card key={application.id} className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-semibold text-gray-900">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                         {application.job.title}
                       </h3>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(application.status)}`}>
@@ -268,24 +233,24 @@ export default function ApplicationsPage() {
                       </span>
                     </div>
                     
-                    <div className="flex items-center text-gray-600 mb-2">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300 mb-2">
                       <Building className="h-4 w-4 mr-2" />
                       <span>{application.job.company}</span>
                     </div>
                     
-                    <div className="flex items-center text-gray-600 mb-2">
+                    <div className="flex items-center text-gray-600 dark:text-gray-300 mb-2">
                       <MapPin className="h-4 w-4 mr-2" />
                       <span>{application.job.location || 'Remote'}</span>
                     </div>
                     
                     {application.job.salaryMin && application.job.salaryMax && (
-                      <div className="flex items-center text-green-600 font-medium mb-2">
+                      <div className="flex items-center text-green-600 dark:text-green-400 font-medium mb-2">
                         <DollarSign className="h-4 w-4 mr-2" />
                         <span>${application.job.salaryMin.toLocaleString()} - ${application.job.salaryMax.toLocaleString()}</span>
                       </div>
                     )}
                     
-                    <div className="flex items-center text-gray-500 text-sm mb-4">
+                    <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-4">
                       <Calendar className="h-4 w-4 mr-2" />
                       <span>Applied {new Date(application.createdAt).toLocaleDateString()}</span>
                       {application.updatedAt !== application.createdAt && (
@@ -298,8 +263,8 @@ export default function ApplicationsPage() {
                     
                     {application.coverLetter && (
                       <div className="mb-4">
-                        <h4 className="font-medium text-gray-900 mb-2">Cover Letter</h4>
-                        <p className="text-gray-700 text-sm line-clamp-3">
+                        <h4 className="font-medium text-gray-900 dark:text-white mb-2">Cover Letter</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">
                           {application.coverLetter}
                         </p>
                       </div>
@@ -307,8 +272,8 @@ export default function ApplicationsPage() {
                     
                     {application.notes && (
                       <div className="mb-4">
-                        <h4 className="font-medium text-gray-900 mb-2">Employer Notes</h4>
-                        <p className="text-gray-700 text-sm bg-gray-50 p-3 rounded">
+                        <h4 className="font-medium text-gray-900 dark:text-white mb-2">Employer Notes</h4>
+                        <p className="text-gray-700 dark:text-gray-300 text-sm bg-gray-50 dark:bg-gray-800 p-3 rounded">
                           {application.notes}
                         </p>
                       </div>
@@ -316,20 +281,11 @@ export default function ApplicationsPage() {
                   </div>
                   
                   <div className="flex flex-col gap-2 ml-6">
-                    <Button variant="outline" size="sm" asChild>
+                    <Button variant="outline" size="sm" asChild className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
                       <Link href={`/jobs/${application.job.id}`}>
-                        <Eye className="h-4 w-4 mr-1" />
                         View Job
                       </Link>
                     </Button>
-                    {application.resumeUrl && (
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={getDownloadUrl(application.resumeUrl)} target="_blank">
-                          <FileText className="h-4 w-4 mr-1" />
-                          View Resume
-                        </Link>
-                      </Button>
-                    )}
                   </div>
                 </div>
               </CardContent>
@@ -337,6 +293,6 @@ export default function ApplicationsPage() {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 } 

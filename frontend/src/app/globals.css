@@ -108,47 +108,6 @@
     @apply bg-gray-900 dark:bg-gray-800 text-white;
   }
 
-  /* Status badges with proper dark mode colors */
-  .bg-yellow-100.dark\:bg-yellow-900 {
-    @apply bg-yellow-100 dark:bg-yellow-900;
-  }
-
-  .text-yellow-800.dark\:text-yellow-200 {
-    @apply text-yellow-800 dark:text-yellow-200;
-  }
-
-  .bg-blue-100.dark\:bg-blue-900 {
-    @apply bg-blue-100 dark:bg-blue-900;
-  }
-
-  .text-blue-800.dark\:text-blue-200 {
-    @apply text-blue-800 dark:text-blue-200;
-  }
-
-  .bg-green-100.dark\:bg-green-900 {
-    @apply bg-green-100 dark:bg-green-900;
-  }
-
-  .text-green-800.dark\:text-green-200 {
-    @apply text-green-800 dark:text-green-200;
-  }
-
-  .bg-red-100.dark\:bg-red-900 {
-    @apply bg-red-100 dark:bg-red-900;
-  }
-
-  .text-red-800.dark\:text-red-200 {
-    @apply text-red-800 dark:text-red-200;
-  }
-
-  .bg-purple-100.dark\:bg-purple-900 {
-    @apply bg-purple-100 dark:bg-purple-900;
-  }
-
-  .text-purple-800.dark\:text-purple-200 {
-    @apply text-purple-800 dark:text-purple-200;
-  }
-
   /* Remove light backgrounds from sections */
   .bg-gradient-to-br, .bg-blue-50, .bg-cyan-50, .bg-green-50, .bg-emerald-50 {
     background: initial !important;
