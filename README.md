@@ -104,10 +104,10 @@ npm run dev
 
 ```env
 # Database Configuration
-DATABASE_URL="postgresql://username:password@localhost:5432/job_board_db"
+DATABASE_URL="postgresql://postgres:postgresql@localhost:5432/job_board_db"
 
 # JWT Configuration
-JWT_SECRET="your-super-secret-jwt-key-here"
+JWT_SECRET="secret-key"
 JWT_EXPIRES_IN="7d"
 
 # Server Configuration
