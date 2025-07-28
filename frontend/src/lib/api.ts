@@ -1,4 +1,3 @@
-// src/lib/api.ts
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
@@ -8,7 +7,6 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('auth-token');
@@ -24,7 +22,7 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+
 api.interceptors.response.use(
   (response) => {
     console.log('API: Response from', response.config.url, 'status:', response.status);

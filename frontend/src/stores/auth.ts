@@ -32,8 +32,12 @@ export const useAuthStore = create<AuthStore>()(
           const response = await api.post<AuthResponse>('/auth/login', data);
           const { user, token, access_token } = response.data;
           const authToken = token || access_token;
-          Cookies.set('auth-token', authToken, { expires: 7, path: '/' });
-          console.log('Token after login:', Cookies.get('auth-token'));
+          if (authToken) {
+            Cookies.set('auth-token', authToken, { expires: 7, path: '/' });
+            console.log('Token after login:', Cookies.get('auth-token'));
+          } else {
+            console.error('Login failed: No auth token received');
+          }
           set({ user, isAuthenticated: true, isLoading: false });
         } catch (error) {
           set({ isLoading: false });
@@ -47,7 +51,11 @@ export const useAuthStore = create<AuthStore>()(
           const response = await api.post<AuthResponse>('/auth/register', data);
           const { user, token, access_token } = response.data;
           const authToken = token || access_token;
-          Cookies.set('auth-token', authToken, { expires: 7, path: '/' });
+          if (authToken) {
+            Cookies.set('auth-token', authToken, { expires: 7, path: '/' });
+          } else {
+            console.error('Register failed: No auth token received');
+          }
           set({ user, isAuthenticated: true, isLoading: false });
         } catch (error) {
           set({ isLoading: false });
@@ -67,8 +75,9 @@ export const useAuthStore = create<AuthStore>()(
           
           // Add text fields
           Object.keys(data).forEach(key => {
-            if (data[key] !== undefined && data[key] !== null) {
-              formData.append(key, data[key]);
+            const value = data[key as keyof typeof data];
+            if (value !== undefined && value !== null) {
+              formData.append(key, String(value));
             }
           });
           
