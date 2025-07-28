@@ -12,13 +12,12 @@ async function bootstrap() {
 
   const frontendUrl = configService.get<string>('FRONTEND_URL') || 'http://localhost:3001';
 
-  // Enable CORS for frontend
   app.enableCors({
     origin: frontendUrl,
     credentials: true,
   });
 
-  // Serve uploaded files
+  
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
@@ -32,16 +31,15 @@ async function bootstrap() {
     }),
   );
 
-  // Global API prefix
   app.setGlobalPrefix('api');
 
-  // Define PORT
+
   const port = configService.get<number>('PORT') || process.env.PORT || 3002;
   await app.listen(port);
 
-  console.log(`🚀 App running at: ${await app.getUrl()}`);
-  console.log(`✅ CORS for: ${frontendUrl}`);
-  console.log(`📂 Serving static files from: ${join(__dirname, '..', 'uploads')}`);
+  console.log(`App running at: ${await app.getUrl()}`);
+  console.log(`CORS for: ${frontendUrl}`);
+  console.log(`Serving static files from: ${join(__dirname, '..', 'uploads')}`);
 }
 
 bootstrap();
