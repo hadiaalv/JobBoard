@@ -388,6 +388,12 @@ export default function JobApplicationsPage() {
                           console.log('Application resumeUrl type:', typeof application.resumeUrl);
                           console.log('Application resumeUrl length:', application.resumeUrl?.length);
                           
+                          // Type guard to ensure resumeUrl is defined
+                          if (!application.resumeUrl) {
+                            toast.error('Resume file not available');
+                            return;
+                          }
+                          
                           const url = getDownloadUrl(application.resumeUrl);
                           console.log('Download clicked:', {
                             originalUrl: application.resumeUrl,

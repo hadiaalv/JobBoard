@@ -13,13 +13,13 @@ import {
 export default function HomePage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-blue-50 via-white to-cyan-50 py-20">
+      <section className="bg-gradient-to-br from-blue-50 via-white to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-20 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Find Your <span className="text-primary">Dream Job</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+              Find Your <span className="text-primary dark:text-primary-foreground">Dream Job</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
               Connect with top companies and discover opportunities that match your skills. 
               Whether you're a job seeker or employer, we make the perfect match.
             </p>
@@ -30,7 +30,7 @@ export default function HomePage() {
                   Browse Jobs
                 </Link>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                 <Link href="/auth/register">
                   <Users className="mr-2 h-5 w-5" />
                   Get Started
@@ -41,192 +41,110 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">10K+</div>
-              <div className="text-gray-600">Active Jobs</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">10K+</div>
+              <div className="text-gray-600 dark:text-gray-300">Active Jobs</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">5K+</div>
-              <div className="text-gray-600">Companies</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">5K+</div>
+              <div className="text-gray-600 dark:text-gray-300">Companies</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">50K+</div>
-              <div className="text-gray-600">Job Seekers</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">50K+</div>
+              <div className="text-gray-600 dark:text-gray-300">Job Seekers</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-primary mb-2">95%</div>
-              <div className="text-gray-600">Success Rate</div>
+              <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">95%</div>
+              <div className="text-gray-600 dark:text-gray-300">Success Rate</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-800 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Why Choose JobBoard?
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We provide the tools and platform you need to find the perfect job or hire the best talent.
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              We provide the tools and platform you need to succeed in your career journey.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="text-center">
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 transition-colors duration-200">
               <CardHeader>
-                <div className="mx-auto bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Search className="h-6 w-6 text-blue-600" />
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+                  <Search className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                 </div>
-                <CardTitle>Smart Job Matching</CardTitle>
-                <CardDescription>
-                  Our AI-powered system matches you with jobs that fit your skills and preferences perfectly.
-                </CardDescription>
+                <CardTitle className="text-gray-900 dark:text-white">Smart Job Matching</CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Our AI-powered matching system connects you with the perfect opportunities based on your skills and preferences.
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 transition-colors duration-200">
               <CardHeader>
-                <div className="mx-auto bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Briefcase className="h-6 w-6 text-green-600" />
+                <div className="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-4">
+                  <Building2 className="h-6 w-6 text-green-600 dark:text-green-400" />
                 </div>
-                <CardTitle>Easy Application</CardTitle>
-                <CardDescription>
-                  Apply to multiple jobs with one click. Upload your resume once and apply everywhere.
-                </CardDescription>
+                <CardTitle className="text-gray-900 dark:text-white">Top Companies</CardTitle>
               </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Connect with leading companies and startups that are actively hiring and growing their teams.
+                </p>
+              </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 transition-colors duration-200">
               <CardHeader>
-                <div className="mx-auto bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Building2 className="h-6 w-6 text-purple-600" />
+                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mb-4">
+                  <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
-                <CardTitle>Top Companies</CardTitle>
-                <CardDescription>
-                  Connect with industry-leading companies and startups looking for talented professionals.
-                </CardDescription>
+                <CardTitle className="text-gray-900 dark:text-white">Community Support</CardTitle>
               </CardHeader>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto bg-yellow-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Star className="h-6 w-6 text-yellow-600" />
-                </div>
-                <CardTitle>Real-time Updates</CardTitle>
-                <CardDescription>
-                  Get instant notifications about your application status and new job opportunities.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto bg-red-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Users className="h-6 w-6 text-red-600" />
-                </div>
-                <CardTitle>Career Support</CardTitle>
-                <CardDescription>
-                  Get access to career advice, resume tips, and interview preparation resources.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <div className="mx-auto bg-indigo-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <CheckCircle className="h-6 w-6 text-indigo-600" />
-                </div>
-                <CardTitle>Verified Employers</CardTitle>
-                <CardDescription>
-                  All employers are verified to ensure legitimate job opportunities and safe applications.
-                </CardDescription>
-              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Join a community of professionals, get career advice, and network with industry experts.
+                </p>
+              </CardContent>
             </Card>
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-white">
+      <section className="py-16 bg-white dark:bg-gray-900 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <Card className="p-8 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
-              <CardHeader className="text-center pb-6">
-                <div className="mx-auto bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                  <Users className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-2xl">For Job Seekers</CardTitle>
-                <CardDescription className="text-lg">
-                  Find your next opportunity with ease
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Browse thousands of job listings</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Create a professional profile</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Track your applications</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Get job recommendations</span>
-                </div>
-                <div className="pt-4">
-                  <Button asChild className="w-full" size="lg">
-                    <Link href="/auth/register">
-                      Start Job Search <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
-              <CardHeader className="text-center pb-6">
-                <div className="mx-auto bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-                  <Building2 className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-2xl">For Employers</CardTitle>
-                <CardDescription className="text-lg">
-                  Find the perfect candidates for your team
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Post unlimited job listings</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Access to talent pool</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Manage applications easily</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>Company branding tools</span>
-                </div>
-                <div className="pt-4">
-                  <Button asChild className="w-full" size="lg">
-                    <Link href="/auth/register">
-                      Start Hiring <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Ready to Get Started?
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Join thousands of professionals who have found their dream jobs through JobBoard.
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg">
+              <Link href="/auth/register">
+                <Users className="mr-2 h-5 w-5" />
+                Create Account
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+              <Link href="/jobs">
+                <Briefcase className="mr-2 h-5 w-5" />
+                Browse Jobs
+              </Link>
+            </Button>
           </div>
         </div>
       </section>
