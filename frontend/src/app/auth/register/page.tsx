@@ -101,18 +101,19 @@ export default function RegisterPage() {
                 </button>
 
                 <button
-                  type="button"
-                  onClick={() => handleRoleSelect('employer')}
-                  className={`p-4 border-2 rounded-lg transition-colors ${
-                    selectedRole === 'employer'
-                      ? 'border-primary bg-primary/5'
-                      : 'border-gray-200 hover:border-gray-600'
-                  }`}
-                  aria-pressed={selectedRole === 'employer'}
-                >
-                  <Building2 className="h-6 w-6 mx-auto mb-2" />
-                  <p className="text-sm font-medium">Employer</p>
+                    type="button"
+                    onClick={() => handleRoleSelect('employer')}
+                    className={`p-4 border-2 rounded-lg transition-colors ${
+                      selectedRole === 'employer'
+                        ? 'border-primary bg-primary/10 text-primary'
+                        : 'border-gray-200 hover:border-gray-600 text-gray-700'
+                    }`}
+                    aria-pressed={selectedRole === 'employer'}
+                  >
+                    <Building2 className="h-6 w-6 mx-auto mb-2" />
+                    <p className="text-sm font-medium">Employer</p>
                 </button>
+
               </div>
               {errors.role && (
                 <p className="text-sm text-red-500">{errors.role.message}</p>
