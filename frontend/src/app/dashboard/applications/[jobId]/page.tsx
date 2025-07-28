@@ -384,11 +384,20 @@ export default function JobApplicationsPage() {
                         variant="outline" 
                         size="sm"
                         onClick={() => {
+                          console.log('Application resumeUrl:', application.resumeUrl);
+                          console.log('Application resumeUrl type:', typeof application.resumeUrl);
+                          console.log('Application resumeUrl length:', application.resumeUrl?.length);
+                          
                           const url = getDownloadUrl(application.resumeUrl);
                           console.log('Download clicked:', {
                             originalUrl: application.resumeUrl,
                             generatedUrl: url
                           });
+                          
+                          if (!url) {
+                            toast.error('Resume file not available');
+                            return;
+                          }
                           
                           // Test if the file exists
                           fetch(url, { method: 'HEAD' })

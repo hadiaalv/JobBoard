@@ -14,7 +14,7 @@ export function getFileUrl(filePath: string): string {
     return filePath;
   }
   
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3002';
   console.log('getFileUrl baseUrl:', baseUrl);
 
   // Normalize the path - replace backslashes with forward slashes
@@ -59,27 +59,53 @@ export function getFileUrl(filePath: string): string {
 }
 
 export function getDownloadUrl(filePath: string): string {
-  if (!filePath) return '';
+  if (!filePath) {
+    console.log('getDownloadUrl: filePath is empty or null');
+    return '';
+  }
   
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3002';
   
-  // Extract folder and filename from the path
+  console.log('getDownloadUrl input:', filePath);
+  
+  // Normalize the path - replace backslashes with forward slashes
   let normalizedPath = filePath.replace(/\\/g, '/');
+  console.log('getDownloadUrl normalizedPath:', normalizedPath);
   
+  // Handle paths that start with /uploads/
   if (normalizedPath.startsWith('/uploads/')) {
     normalizedPath = normalizedPath.substring(8); // Remove '/uploads/'
   } else if (normalizedPath.startsWith('./uploads/')) {
     normalizedPath = normalizedPath.substring(10); // Remove './uploads/'
   }
   
+  console.log('getDownloadUrl after prefix removal:', normalizedPath);
+  
+  // Check if the path is empty or just slashes
+  if (!normalizedPath || normalizedPath === '/' || normalizedPath === '') {
+    console.log('getDownloadUrl: path is empty after normalization');
+    return '';
+  }
+  
   // Split into folder and filename
-  const parts = normalizedPath.split('/');
+  const parts = normalizedPath.split('/').filter(part => part.length > 0);
+  console.log('getDownloadUrl parts:', parts);
+  
   if (parts.length >= 2) {
     const folder = parts[0];
     const filename = parts[1];
-    return `${baseUrl}/download/${folder}/${filename}`;
+    const result = `${baseUrl}/download/${folder}/${filename}`;
+    console.log('getDownloadUrl result (folder/filename):', result);
+    return result;
+  } else if (parts.length === 1 && parts[0]) {
+    // Handle case where it's just a filename - assume it's a resume
+    const filename = parts[0];
+    const result = `${baseUrl}/download/resumes/${filename}`;
+    console.log('getDownloadUrl result (filename only):', result);
+    return result;
   }
   
   // Fallback to regular file URL
+  console.log('getDownloadUrl fallback to getFileUrl');
   return getFileUrl(filePath);
 }
