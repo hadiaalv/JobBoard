@@ -36,7 +36,6 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 - **File Upload**: Multer
 - **Email**: Nodemailer
 - **Validation**: class-validator
-- **Documentation**: Swagger/OpenAPI
 
 ### Frontend
 - **Framework**: Next.js 14 (App Router)
@@ -51,7 +50,7 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 
 - Node.js 18+ 
 - PostgreSQL 12+
-- npm or yarn
+- npm 
 
 ##  Quick Start
 
