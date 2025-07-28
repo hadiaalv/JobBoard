@@ -105,7 +105,7 @@ export default function RegisterPage() {
                   className={`p-4 border-2 rounded-lg transition-colors ${
                     selectedRole === 'employer'
                       ? 'border-primary bg-primary/5'
-                      : 'border-gray-200 hover:border-gray-300'
+                      : 'border-gray-200 hover:border-gray-600'
                   }`}
                   aria-pressed={selectedRole === 'employer'}
                 >
