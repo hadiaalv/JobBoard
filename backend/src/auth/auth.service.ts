@@ -1,5 +1,6 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import { MailService } from '../mail/mail.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
@@ -9,7 +10,8 @@ import { RegisterDto } from './dto/register.dto';
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private mailService: MailService
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
@@ -51,6 +53,17 @@ export class AuthService {
         ...registerDto,
         password: hashedPassword,
       });
+      
+      // Send welcome email
+      try {
+        await this.mailService.sendRegistrationEmail(
+          user.email,
+          user.firstName
+        );
+      } catch (error) {
+        console.error('Failed to send registration email:', error);
+        // Don't fail registration if email fails
+      }
       
       // Return the same format as login for consistency
       return this.login(user);

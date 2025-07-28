@@ -2,11 +2,16 @@ services:
   - type: web
     name: jobboard-backend
     env: node
-    rootDir: backend
+    plan: free
     buildCommand: npm install && npm run build
-    startCommand: npm run start:prod
+    startCommand: npm run start
     envVars:
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: jobboard-db
+          property: connectionString
       - key: JWT_SECRET
-        sync: false
+        value: your_jwt_secret_here
+
+databases:
+  - name: jobboard-db

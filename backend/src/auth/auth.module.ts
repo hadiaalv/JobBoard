@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
+import { MailModule } from '../mail/mail.module';
 import { User } from '../users/entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -25,7 +26,8 @@ import { LocalStrategy } from './strategies/local.strategy';
       }),
       inject: [ConfigService],
     }),
-    UsersModule, 
+    UsersModule,
+    MailModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, LocalStrategy],
