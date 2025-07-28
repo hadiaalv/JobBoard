@@ -15,7 +15,16 @@ export class ApplicationsController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.JOB_SEEKER)
-  @UseInterceptors(FileInterceptor('resume'))
+  @UseInterceptors(FileInterceptor('resume', {
+    dest: './uploads/resumes',
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype === 'application/pdf') {
+        cb(null, true);
+      } else {
+        cb(new Error('Only PDF files are allowed'), false);
+      }
+    },
+  }))
   async create(
     @Body() createApplicationDto: CreateApplicationDto,
     @Request() req,
@@ -76,18 +85,5 @@ export class ApplicationsController {
   async testCreate(@Body() body: any, @Request() req) {
     console.log('Test endpoint received:', { body, user: req.user?.id });
     return { message: 'Test successful', received: body };
-  }
-
-  // Debug endpoint to check resume URLs
-  @Get('debug/resume-urls')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.EMPLOYER)
-  async debugResumeUrls(@Request() req) {
-    const applications = await this.applicationsService.findByEmployer(req.user.id);
-    return applications.map(app => ({
-      id: app.id,
-      resumeUrl: app.resumeUrl,
-      filename: app.resumeFilename
-    }));
   }
 }

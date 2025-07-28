@@ -28,12 +28,12 @@ import { Contact } from './contact/entities/contact.entity';
       isGlobal: true,
     }),
 
-    // Database configuration - PostgreSQL
+    // PostgreSQL configuration using DATABASE_URL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        type: 'postgres' as const,
-        url: configService.get<string>('DATABASE_URL') || 'postgresql://postgres:postgres@localhost:5432/job_board_db',
+        type: 'postgres',
+        url: configService.get<string>('DATABASE_URL'),
         entities: [User, Job, Application, Contact],
         synchronize: configService.get<string>('NODE_ENV') !== 'production',
         logging: configService.get<string>('NODE_ENV') === 'development',
