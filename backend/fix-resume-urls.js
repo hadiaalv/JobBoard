@@ -10,7 +10,7 @@ async function fixResumeUrls() {
     console.log('Connecting to database...');
     const client = await pool.connect();
     
-    // Get all applications with resumeUrl
+    
     const result = await client.query(
       'SELECT id, "resumeUrl" FROM applications WHERE "resumeUrl" IS NOT NULL'
     );
@@ -21,21 +21,21 @@ async function fixResumeUrls() {
       let newUrl = row.resumeUrl;
       let needsUpdate = false;
       
-      // Normalize backslashes to forward slashes
+     
       if (newUrl.includes('\\')) {
         newUrl = newUrl.replace(/\\/g, '/');
         needsUpdate = true;
         console.log(`Normalizing backslashes for ${row.id}: ${row.resumeUrl} -> ${newUrl}`);
       }
       
-      // Fix paths that start with ./uploads/
+     
       if (newUrl.startsWith('./uploads/')) {
         newUrl = newUrl.replace('./', '/');
         needsUpdate = true;
         console.log(`Fixing relative path for ${row.id}: ${row.resumeUrl} -> ${newUrl}`);
       }
       
-      // Fix double path issues (uploads/resumes/uploads/resumes/...)
+      
       if (newUrl.includes('uploads/resumes/uploads/resumes/')) {
         const filename = newUrl.split('/').pop();
         newUrl = `/uploads/resumes/${filename}`;
@@ -43,7 +43,7 @@ async function fixResumeUrls() {
         console.log(`Fixing double path for ${row.id}: ${row.resumeUrl} -> ${newUrl}`);
       }
       
-      // Fix paths that contain uploads/resumes but should be just filename
+      
       if (newUrl.includes('uploads/resumes/') && newUrl.split('/').length > 3) {
         const filename = newUrl.split('/').pop();
         newUrl = `/uploads/resumes/${filename}`;
