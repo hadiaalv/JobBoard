@@ -10,7 +10,7 @@ const nextConfig = {
     return config;
   },
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api';
     return [
       {
         source: '/api/:path*',

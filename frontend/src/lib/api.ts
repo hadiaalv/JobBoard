@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import toast from 'react-hot-toast';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api',
   timeout: 10000,
 });
 
