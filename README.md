@@ -94,7 +94,7 @@ npm run dev
 ### 4. Access the Application
 
 - Frontend: http://localhost:3001
-- Backend API: http://localhost:3001/api
+
 
 
 ##  Environment Variables
