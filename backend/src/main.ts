@@ -10,14 +10,14 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  const frontendUrl = configService.get<string>('FRONTEND_URL') || 'http://localhost:3000';
+  const frontendUrl = configService.get<string>('FRONTEND_URL') || 'http://localhost:3001';
 
   app.enableCors({
     origin: frontendUrl,
     credentials: true,
   });
 
-  // Serve static files from uploads directory (before setting global prefix)
+  // Serve static files from uploads directory
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
@@ -32,7 +32,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  const port = configService.get<number>('PORT') || 3001;
+
+  const port = process.env.PORT || configService.get<number>('PORT') || 3002;
   await app.listen(port);
 
   console.log(`Application is running on: ${await app.getUrl()}`);
