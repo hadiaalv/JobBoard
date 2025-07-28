@@ -47,7 +47,7 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 - **UI Components**: Shadcn/ui
 - **Notifications**: React Hot Toast
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - Node.js 18+ 
 - PostgreSQL 12+
