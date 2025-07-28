@@ -17,7 +17,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Serve static files from uploads directory
+
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
@@ -33,7 +33,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
 
-  const port = process.env.PORT || configService.get<number>('PORT') || 3002;
+  const port = process.env.PORT || configService.get<number>('PORT') || 3000;
   await app.listen(port);
 
   console.log(`Application is running on: ${await app.getUrl()}`);
