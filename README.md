@@ -142,37 +142,8 @@ NEXT_PUBLIC_APP_NAME="JobBoard"
 NEXT_PUBLIC_APP_URL="http://localhost:3001"
 ```
 
-##  API Endpoints
 
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-
-### Users
-- `GET /api/users/me` - Get current user profile
-- `PATCH /api/users/me` - Update user profile
-- `GET /api/users/:id` - Get user by ID (admin only)
-
-### Jobs
-- `GET /api/jobs` - Get all jobs (with filters)
-- `POST /api/jobs` - Create new job (employers only)
-- `GET /api/jobs/:id` - Get job details
-- `PATCH /api/jobs/:id` - Update job (employer only)
-- `DELETE /api/jobs/:id` - Delete job (employer only)
-- `GET /api/jobs/my-jobs` - Get employer's jobs
-
-### Applications
-- `POST /api/applications` - Apply to job (job seekers only)
-- `GET /api/applications/me` - Get user's applications
-- `GET /api/applications/employer` - Get employer's applications
-- `GET /api/applications/job/:id` - Get applications for specific job
-- `PATCH /api/applications/:id/status` - Update application status
-
-### File Upload
-- `POST /api/upload/avatar` - Upload user avatar
-- `POST /api/upload/resume` - Upload resume
-
-## 🗄️ Database Schema
+##  Database Schema
 
 ### Users Table
 ```sql
