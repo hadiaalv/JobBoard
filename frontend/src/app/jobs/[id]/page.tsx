@@ -101,32 +101,32 @@ export default function JobDetailPage() {
         </Link>
       </Button>
 
-      <div className="bg-white rounded-lg shadow-sm border">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300">
         {/* Header */}
-        <div className="p-8 border-b">
+        <div className="p-8 border-b border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">{job.title}</h1>
-              <div className="flex items-center text-gray-600 mb-2">
-                <Building className="h-5 w-5 mr-2" />
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{job.title}</h1>
+              <div className="flex items-center text-gray-600 dark:text-gray-300 mb-2">
+                <Building className="h-5 w-5 mr-2 animated-icon" />
                 <span className="text-lg">{job.company}</span>
               </div>
-              <div className="flex items-center text-gray-600 mb-2">
-                <MapPin className="h-5 w-5 mr-2" />
+              <div className="flex items-center text-gray-600 dark:text-gray-300 mb-2">
+                <MapPin className="h-5 w-5 mr-2 animated-icon" />
                 <span>{job.location || 'Remote'}</span>
               </div>
               {job.salaryMin && job.salaryMax && (
-                <div className="flex items-center text-green-600 font-semibold text-lg mb-2">
-                  <DollarSign className="h-5 w-5 mr-2" />
+                <div className="flex items-center text-green-600 dark:text-green-400 font-semibold text-lg mb-2">
+                  <DollarSign className="h-5 w-5 mr-2 animated-icon" />
                   <span>${job.salaryMin.toLocaleString()} - ${job.salaryMax.toLocaleString()}</span>
                 </div>
               )}
             </div>
             <div className="text-right">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 mb-2">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-blue-700 shadow-sm mb-2">
                 {job.type?.replace('_', ' ')}
               </span>
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-gray-500 dark:text-gray-400">
                 Posted {new Date(job.createdAt).toLocaleDateString()}
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function JobDetailPage() {
             <div className="md:col-span-2">
               <h2 className="text-xl font-semibold mb-4">Job Description</h2>
               <div className="prose max-w-none">
-                <p className="text-gray-700 whitespace-pre-wrap">{job.description}</p>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">{job.description}</p>
               </div>
 
               {job.skills && job.skills.length > 0 && (
@@ -150,7 +150,7 @@ export default function JobDetailPage() {
                     {job.skills.map((skill, index) => (
                       <span
                         key={index}
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-blue-700 shadow-sm transition-all duration-300 transform hover:scale-105"
                       >
                         {skill}
                       </span>
@@ -162,9 +162,9 @@ export default function JobDetailPage() {
               {job.benefits && job.benefits.length > 0 && (
                 <div className="mt-8">
                   <h3 className="text-lg font-semibold mb-3">Benefits</h3>
-                  <ul className="list-disc list-inside text-gray-700 space-y-1">
+                  <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 space-y-1">
                     {job.benefits.map((benefit, index) => (
-                      <li key={index}>{benefit}</li>
+                      <li key={index} className="leading-relaxed">{benefit}</li>
                     ))}
                   </ul>
                 </div>
@@ -173,42 +173,42 @@ export default function JobDetailPage() {
 
             {/* Sidebar */}
             <div className="md:col-span-1">
-              <div className="bg-gray-50 rounded-lg p-6 sticky top-6">
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-xl p-6 sticky top-6 shadow-lg border border-gray-200 dark:border-gray-600">
                 <h3 className="text-lg font-semibold mb-4">Job Overview</h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-center">
-                    <Clock className="h-5 w-5 text-gray-400 mr-3" />
+                    <Clock className="h-5 w-5 text-gray-400 mr-3 animated-icon" />
                     <div>
-                      <p className="text-sm text-gray-600">Job Type</p>
-                      <p className="font-medium">{job.type?.replace('_', ' ')}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Job Type</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{job.type?.replace('_', ' ')}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center">
-                    <MapPin className="h-5 w-5 text-gray-400 mr-3" />
+                    <MapPin className="h-5 w-5 text-gray-400 mr-3 animated-icon" />
                     <div>
-                      <p className="text-sm text-gray-600">Location</p>
-                      <p className="font-medium">{job.location || 'Remote'}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Location</p>
+                      <p className="font-medium text-gray-900 dark:text-white">{job.location || 'Remote'}</p>
                     </div>
                   </div>
 
                   {job.experienceLevel && (
                     <div className="flex items-center">
-                      <User className="h-5 w-5 text-gray-400 mr-3" />
+                      <User className="h-5 w-5 text-gray-400 mr-3 animated-icon" />
                       <div>
-                        <p className="text-sm text-gray-600">Experience</p>
-                        <p className="font-medium">{job.experienceLevel}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Experience</p>
+                        <p className="font-medium text-gray-900 dark:text-white">{job.experienceLevel}</p>
                       </div>
                     </div>
                   )}
 
                   {job.applicationDeadline && (
                     <div className="flex items-center">
-                      <Calendar className="h-5 w-5 text-gray-400 mr-3" />
+                      <Calendar className="h-5 w-5 text-gray-400 mr-3 animated-icon" />
                       <div>
-                        <p className="text-sm text-gray-600">Deadline</p>
-                        <p className="font-medium">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Deadline</p>
+                        <p className="font-medium text-gray-900 dark:text-white">
                           {new Date(job.applicationDeadline).toLocaleDateString()}
                         </p>
                       </div>
@@ -219,7 +219,7 @@ export default function JobDetailPage() {
                 {/* Apply Button */}
                 <div className="mt-6">
                   {!isAuthenticated ? (
-                    <Button className="w-full" asChild>
+                    <Button className="w-full interactive-button" asChild>
                       <Link href="/auth/login">Login to Apply</Link>
                     </Button>
                   ) : user?.role === 'job_seeker' ? (
@@ -229,7 +229,7 @@ export default function JobDetailPage() {
                       </Button>
                     ) : (
                       <Button 
-                        className="w-full" 
+                        className="w-full interactive-button" 
                         onClick={handleApply}
                         disabled={applying}
                       >
@@ -246,10 +246,10 @@ export default function JobDetailPage() {
                 {/* Employer Actions */}
                 {isAuthenticated && user?.role === 'employer' && job.postedBy?.id === user.id && (
                   <div className="mt-4 space-y-2">
-                    <Button variant="outline" className="w-full" asChild>
+                    <Button variant="outline" className="w-full interactive-button" asChild>
                       <Link href={`/jobs/edit/${job.id}`}>Edit Job</Link>
                     </Button>
-                    <Button variant="outline" className="w-full" asChild>
+                    <Button variant="outline" className="w-full interactive-button" asChild>
                       <Link href={`/dashboard/applications/${job.id}`}>View Applications</Link>
                     </Button>
                   </div>

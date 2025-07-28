@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const [resume, setResume] = useState<File | null>(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);                                                                                                                                 
+  const [loading, setLoading] = useState(true);                                                                                                                                  
   const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
@@ -57,7 +57,7 @@ export default function ProfilePage() {
   }, [user, isAuthenticated, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (!editing) return; // Only allow changes when editing
+    if (!editing) return;
     
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
@@ -65,7 +65,7 @@ export default function ProfilePage() {
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!editing) return; // Only allow changes when editing
+    if (!editing) return;
     
     if (e.target.files && e.target.files[0]) {
       setAvatar(e.target.files[0]);
@@ -74,7 +74,7 @@ export default function ProfilePage() {
   };
 
   const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!editing) return; // Only allow changes when editing
+    if (!editing) return;
     
     if (e.target.files && e.target.files[0]) {
       setResume(e.target.files[0]);
@@ -97,7 +97,6 @@ export default function ProfilePage() {
     console.log("Profile page: Original form", originalForm);
 
     try {
-      // Check if there are actual changes
       const hasChanges = 
         form.firstName !== originalForm.firstName ||
         form.lastName !== originalForm.lastName ||
@@ -124,7 +123,6 @@ export default function ProfilePage() {
       const updatedUser = await updateUser(updateData, avatar || undefined, resume || undefined);
       console.log("Profile page: Update successful", updatedUser);
       
-      // Update the original form with new values
       setOriginalForm({
         firstName: form.firstName,
         lastName: form.lastName,
@@ -132,7 +130,6 @@ export default function ProfilePage() {
         bio: form.bio,
       });
       
-      // Reset file inputs
       setAvatar(null);
       setResume(null);
       

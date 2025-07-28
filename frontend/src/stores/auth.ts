@@ -65,13 +65,11 @@ export const useAuthStore = create<AuthStore>()(
         try {
           const formData = new FormData();
           
-          // Add text fields
           Object.keys(data).forEach(key => {
             if (data[key] !== undefined && data[key] !== null) {
               formData.append(key, data[key]);
             }
           });
-          
           
           if (avatar) {
             formData.append('avatar', avatar);
@@ -101,13 +99,11 @@ export const useAuthStore = create<AuthStore>()(
         const token = Cookies.get('auth-token');
         console.log('Initializing auth, token:', token);
         if (token) {
-          // Fetch user data if token exists
           api.get<User>('/users/me')
             .then(response => {
               set({ user: response.data, isAuthenticated: true });
             })
             .catch(() => {
-              // Token is invalid, clear it
               Cookies.remove('auth-token');
               set({ user: null, isAuthenticated: false });
             });

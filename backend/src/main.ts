@@ -18,13 +18,11 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Serve static files with proper content-type headers
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
     setHeaders: (res, path) => {
       if (path.endsWith('.pdf')) {
         res.setHeader('Content-Type', 'application/pdf');
-        // For resumes, set attachment disposition to force download
         if (path.includes('/resumes/')) {
           res.setHeader('Content-Disposition', 'attachment; filename="' + path.split('/').pop() + '"');
         } else {

@@ -43,7 +43,6 @@ export class AppController {
     try {
       const fileBuffer = readFileSync(filePath);
       
-      // Set appropriate headers based on file type
       if (filename.endsWith('.pdf')) {
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `inline; filename="${filename}"`);

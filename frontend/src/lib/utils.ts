@@ -17,18 +17,15 @@ export function getFileUrl(filePath: string): string {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3002';
   console.log('getFileUrl baseUrl:', baseUrl);
 
-  // Normalize the path - replace backslashes with forward slashes
   let normalizedPath = filePath.replace(/\\/g, '/');
   console.log('getFileUrl normalizedPath:', normalizedPath);
 
-  // Handle paths that start with /uploads/
   if (normalizedPath.startsWith('/uploads/')) {
     const result = `${baseUrl}${normalizedPath}`;
     console.log('getFileUrl result (uploads):', result);
     return result;
   }
   
-  // Handle relative paths like ./uploads/resumes/filename.pdf
   if (normalizedPath.startsWith('./uploads/')) {
     const cleanPath = normalizedPath.replace('./', '/');
     const result = `${baseUrl}${cleanPath}`;
@@ -36,23 +33,19 @@ export function getFileUrl(filePath: string): string {
     return result;
   }
   
-  // Handle paths that contain uploads/resumes (double path issue)
   if (normalizedPath.includes('uploads/resumes/')) {
-    // Extract just the filename from the path
     const filename = normalizedPath.split('/').pop();
     const result = `${baseUrl}/uploads/resumes/${filename}`;
     console.log('getFileUrl result (double path fix):', result);
     return result;
   }
   
-  // Handle just filenames
   if (!normalizedPath.includes('/')) {
     const result = `${baseUrl}/uploads/resumes/${normalizedPath}`;
     console.log('getFileUrl result (filename):', result);
     return result;
   }
   
-  // Handle other path formats
   const result = `${baseUrl}${normalizedPath.startsWith('/') ? '' : '/'}${normalizedPath}`;
   console.log('getFileUrl result (other):', result);
   return result;
@@ -68,18 +61,15 @@ export function getDownloadUrl(filePath: string): string {
   
   console.log('getDownloadUrl input:', filePath);
   
-  // Normalize the path - replace backslashes with forward slashes
   let normalizedPath = filePath.replace(/\\/g, '/');
   console.log('getDownloadUrl normalizedPath:', normalizedPath);
   
-  // If the path already starts with /uploads/, just append it to the base URL
   if (normalizedPath.startsWith('/uploads/')) {
     const result = `${baseUrl}${normalizedPath}`;
     console.log('getDownloadUrl result (uploads):', result);
     return result;
   }
   
-  // Handle relative paths like ./uploads/resumes/filename.pdf
   if (normalizedPath.startsWith('./uploads/')) {
     const cleanPath = normalizedPath.replace('./', '/');
     const result = `${baseUrl}${cleanPath}`;
@@ -87,14 +77,12 @@ export function getDownloadUrl(filePath: string): string {
     return result;
   }
   
-  // Handle just filenames - assume it's a resume
   if (!normalizedPath.includes('/')) {
     const result = `${baseUrl}/uploads/resumes/${normalizedPath}`;
     console.log('getDownloadUrl result (filename):', result);
     return result;
   }
   
-  // Handle other path formats
   const result = `${baseUrl}${normalizedPath.startsWith('/') ? '' : '/'}${normalizedPath}`;
   console.log('getDownloadUrl result (other):', result);
   return result;

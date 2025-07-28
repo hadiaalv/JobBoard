@@ -28,7 +28,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Get theme from localStorage or default to system preference
     const storedTheme = localStorage.getItem('theme') as Theme
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
     const initialTheme = storedTheme || systemTheme
@@ -39,12 +38,10 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   useEffect(() => {
     if (mounted) {
-      // Apply theme to document
       const root = document.documentElement
       root.classList.remove('light', 'dark')
       root.classList.add(theme)
       
-      // Save to localStorage
       localStorage.setItem('theme', theme)
     }
   }, [theme, mounted])
@@ -53,7 +50,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     setTheme(prev => prev === 'light' ? 'dark' : 'light')
   }
 
-  // Prevent hydration mismatch
   if (!mounted) {
     return <div style={{ visibility: 'hidden' }}>{children}</div>
   }

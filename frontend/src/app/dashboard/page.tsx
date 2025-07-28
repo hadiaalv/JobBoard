@@ -219,10 +219,10 @@ export default function DashboardPage() {
                       </div>
                       <div className="text-right">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          application.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
-                          application.status === 'shortlisted' ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200' :
-                          application.status === 'hired' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
-                          'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+                          application.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800' :
+                          application.status === 'shortlisted' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800' :
+                          application.status === 'hired' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800' :
+                          'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800'
                         }`}>
                           {application.status}
                         </span>
@@ -308,10 +308,10 @@ export default function DashboardPage() {
                       </div>
                       <div className="text-right">
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          application.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200' :
-                          application.status === 'shortlisted' ? 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200' :
-                          application.status === 'hired' ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' :
-                          'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+                          application.status === 'pending' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200 border border-yellow-200 dark:border-yellow-800' :
+                          application.status === 'shortlisted' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 border border-blue-200 dark:border-blue-800' :
+                          application.status === 'hired' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 border border-green-200 dark:border-green-800' :
+                          'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border border-red-200 dark:border-red-800'
                         }`}>
                           {application.status}
                         </span>
