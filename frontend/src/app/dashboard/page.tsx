@@ -36,7 +36,6 @@ export default function DashboardPage() {
     if (user && user.role) {
       fetchDashboardData();
     } else if (user && !user.role) {
-      // If user exists but no role, log a warning
       console.warn("User exists but no role found:", user);
     }
   }, [isAuthenticated, user, router]);
@@ -47,7 +46,6 @@ export default function DashboardPage() {
       console.log("Fetching dashboard data for user role:", user?.role);
       
       if (user?.role === "employer") {
-        // Fetch employer data
         const [jobsResponse, applicationsResponse] = await Promise.all([
           api.get("/jobs/my-jobs"),
           api.get("/applications/employer"),
@@ -63,7 +61,6 @@ export default function DashboardPage() {
           pendingApplications: applicationsResponse.data?.filter((app: Application) => app.status === "pending").length || 0,
         });
       } else if (user?.role === "job_seeker") {
-        // Fetch job seeker data
         const applicationsResponse = await api.get("/applications/me");
         setApplications(applicationsResponse.data);
         
@@ -74,7 +71,6 @@ export default function DashboardPage() {
           pendingApplications: applicationsResponse.data.filter((app: Application) => app.status === "pending").length,
         });
       } else {
-        // Handle unknown role or no role
         console.warn("Unknown user role:", user?.role);
         setStats({
           totalJobs: 0,
@@ -86,10 +82,8 @@ export default function DashboardPage() {
     } catch (error: any) {
       console.error("Failed to fetch dashboard data:", error);
       
-      // Handle specific error cases
       if (error.response?.status === 403) {
         console.warn("Access forbidden - user may not have the correct role");
-        // Set empty stats for forbidden access
         setStats({
           totalJobs: 0,
           totalApplications: 0,
@@ -108,7 +102,6 @@ export default function DashboardPage() {
     return null;
   }
 
-  // Debug: Log user information
   console.log("Dashboard - User:", user);
   console.log("Dashboard - User role:", user?.role);
 
@@ -132,7 +125,6 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
           <CardContent className="p-6">
@@ -191,10 +183,8 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Role-specific content */}
       {user?.role === "employer" ? (
         <>
-          {/* Recent Applications */}
           <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 mb-8">
             <CardHeader>
               <CardTitle className="text-gray-900 dark:text-white">Recent Applications</CardTitle>
@@ -239,7 +229,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Quick Actions */}
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
               <CardHeader>
@@ -278,7 +267,6 @@ export default function DashboardPage() {
         </>
       ) : (
         <>
-          {/* Recent Applications for Job Seekers */}
           <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 mb-8">
             <CardHeader>
               <CardTitle className="text-gray-900 dark:text-white">Your Applications</CardTitle>
@@ -328,7 +316,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          {/* Quick Actions for Job Seekers */}
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
               <CardHeader>
