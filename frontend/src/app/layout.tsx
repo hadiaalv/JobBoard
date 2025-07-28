@@ -5,7 +5,7 @@ import './globals.css'
 import { Navigation } from '@/components/navigation';
 
 export const metadata: Metadata = {
-  title: 'Your App',
+  title: 'JobBoard',
   description: 'Your app description',
 }
 

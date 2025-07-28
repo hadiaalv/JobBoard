@@ -72,7 +72,7 @@ export const useAuthStore = create<AuthStore>()(
             }
           });
           
-          // Add files if provided
+          
           if (avatar) {
             formData.append('avatar', avatar);
           }
