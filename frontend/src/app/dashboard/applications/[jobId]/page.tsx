@@ -393,16 +393,17 @@ export default function JobApplicationsPage() {
                           // Test if the file exists
                           fetch(url, { method: 'HEAD' })
                             .then(response => {
+                              console.log('File check response:', response.status, response.statusText);
                               if (response.ok) {
                                 window.open(url, '_blank');
                               } else {
-                                console.error('File not found:', url);
-                                toast.error('Resume file not found');
+                                console.error('File not found:', url, 'Status:', response.status);
+                                toast.error(`Resume file not found (${response.status})`);
                               }
                             })
                             .catch(error => {
                               console.error('Error accessing file:', error);
-                              toast.error('Error accessing resume file');
+                              toast.error(`Error accessing resume file: ${error.message}`);
                             });
                         }}
                       >

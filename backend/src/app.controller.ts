@@ -9,4 +9,23 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('health')
+  getHealth() {
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      environment: process.env.NODE_ENV || 'development'
+    };
+  }
+
+  @Get('test-file')
+  testFile() {
+    return {
+      message: 'File serving test',
+      testUrl: '/uploads/resumes/test.pdf',
+      note: 'This endpoint tests if static file serving is configured correctly'
+    };
+  }
 }
