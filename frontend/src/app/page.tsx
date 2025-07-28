@@ -243,25 +243,25 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">For Job Seekers</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/jobs" className="hover:text-white">Browse Jobs</Link></li>
-                <li><Link href="/auth/register" className="hover:text-white">Create Profile</Link></li>
-                <li><Link href="/dashboard" className="hover:text-white">Dashboard</Link></li>
+                <li><Link href="/jobs" className="hover:text-blue-500">Browse Jobs</Link></li>
+                <li><Link href="/auth/register" className="hover:text-blue-500">Create Profile</Link></li>
+                <li><Link href="/dashboard" className="hover:text-blue-500">Dashboard</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">For Employers</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><Link href="/jobs/create" className="hover:text-white">Post a Job</Link></li>
-                <li><Link href="/auth/register" className="hover:text-white">Employer Signup</Link></li>
-                <li><Link href="/dashboard" className="hover:text-white">Manage Jobs</Link></li>
+                <li><Link href="/jobs/create" className="hover:text-blue-500">Post a Job</Link></li>
+                <li><Link href="/auth/register" className="hover:text-blue-500">Employer Signup</Link></li>
+                <li><Link href="/dashboard" className="hover:text-blue-500">Manage Jobs</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold mb-4">Support</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white">Help Center</a></li>
-                <li><Link href="/contact-us" className="hover:text-white">Contact Us</Link></li>
-                <li><a href="#" className="hover:text-white">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-blue-500">Help Center</a></li>
+                <li><Link href="/contact-us" className="hover:text-blue-500">Contact Us</Link></li>
+                <li><a href="#" className="hover:text-blue-500">Privacy Policy</a></li>
               </ul>
             </div>
           </div>
@@ -270,6 +270,7 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
     </>
   )
 }
