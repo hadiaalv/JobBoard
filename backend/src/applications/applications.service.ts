@@ -12,6 +12,7 @@ import { UpdateApplicationStatusDto } from './dto/update-application-status.dto'
 import { User } from '../users/entities/user.entity';
 import { Job } from '../jobs/entities/job.entity';
 import { MailService } from '../mail/mail.service';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class ApplicationsService {
@@ -21,6 +22,7 @@ export class ApplicationsService {
     @InjectRepository(Job)
     private readonly jobRepository: Repository<Job>,
     private readonly mailService: MailService,
+    private readonly uploadService: UploadService,
   ) {}
 
   async create(
@@ -49,11 +51,17 @@ export class ApplicationsService {
       throw new NotFoundException('Job not found');
     }
 
+    // Use upload service for consistent path handling
+    let resumeUrl = null;
+    if (file) {
+      resumeUrl = await this.uploadService.uploadResume(file);
+    }
+
     const application = this.applicationRepository.create({
       job,
       applicant: user,
       coverLetter: createApplicationDto.coverLetter,
-      resumeUrl: file?.path,
+      resumeUrl,
     });
 
     const savedApplication = await this.applicationRepository.save(application);

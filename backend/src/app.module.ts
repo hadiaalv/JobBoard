@@ -28,19 +28,34 @@ import { Contact } from './contact/entities/contact.entity';
       isGlobal: true,
     }),
 
-    // PostgreSQL configuration using DATABASE_URL
+    // Database configuration - supports both PostgreSQL and SQLite
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        url: configService.get<string>('DATABASE_URL'),
-        entities: [User, Job, Application, Contact],
-        synchronize: configService.get<string>('NODE_ENV') !== 'production',
-        logging: configService.get<string>('NODE_ENV') === 'development',
-        ssl: configService.get<string>('NODE_ENV') === 'production'
-          ? { rejectUnauthorized: false }
-          : false,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+        const isSqlite = databaseUrl?.startsWith('sqlite://');
+        
+        if (isSqlite) {
+          return {
+            type: 'sqlite' as const,
+            database: databaseUrl.replace('sqlite://', ''),
+            entities: [User, Job, Application, Contact],
+            synchronize: configService.get<string>('NODE_ENV') !== 'production',
+            logging: configService.get<string>('NODE_ENV') === 'development',
+          };
+        } else {
+          return {
+            type: 'postgres' as const,
+            url: databaseUrl,
+            entities: [User, Job, Application, Contact],
+            synchronize: configService.get<string>('NODE_ENV') !== 'production',
+            logging: configService.get<string>('NODE_ENV') === 'development',
+            ssl: configService.get<string>('NODE_ENV') === 'production'
+              ? { rejectUnauthorized: false }
+              : false,
+          };
+        }
+      },
       inject: [ConfigService],
     }),
 

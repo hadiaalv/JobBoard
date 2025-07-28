@@ -8,6 +8,8 @@ export function cn(...inputs: ClassValue[]) {
 export function getFileUrl(filePath: string): string {
   if (!filePath) return '';
   
+  console.log('getFileUrl input:', filePath);
+  
   // If it's already a full URL, return as is
   if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
     return filePath;
@@ -17,17 +19,20 @@ export function getFileUrl(filePath: string): string {
   
   // If it starts with /uploads/, construct the full URL
   if (filePath.startsWith('/uploads/')) {
-    return `${baseUrl}${filePath}`;
+    const result = `${baseUrl}${filePath}`;
+    console.log('getFileUrl result:', result);
+    return result;
   }
   
-  // If it contains uploads in the path (like ./uploads/resumes/filename.pdf)
-  if (filePath.includes('uploads/')) {
-    // Extract the part after 'uploads/'
-    const uploadsIndex = filePath.indexOf('uploads/');
-    const relativePath = filePath.substring(uploadsIndex);
-    return `${baseUrl}/${relativePath}`;
+  // If it's just a filename, assume it's in uploads/resumes
+  if (!filePath.includes('/')) {
+    const result = `${baseUrl}/uploads/resumes/${filePath}`;
+    console.log('getFileUrl result (filename):', result);
+    return result;
   }
   
-  // If it's just a filename, assume it's in uploads
-  return `${baseUrl}/uploads/${filePath}`;
+  // For any other case, just append to base URL
+  const result = `${baseUrl}${filePath.startsWith('/') ? '' : '/'}${filePath}`;
+  console.log('getFileUrl result (fallback):', result);
+  return result;
 }
