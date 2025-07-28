@@ -51,7 +51,7 @@ export class ApplicationsService {
       job,
       applicant: user,
       coverLetter: createApplicationDto.coverLetter,
-      resumeUrl: file?.path,
+      resumeUrl: file ? `/uploads/resumes/${file.filename}` : null,
     });
 
     const savedApplication = await this.applicationRepository.save(application);

@@ -380,11 +380,34 @@ export default function JobApplicationsPage() {
                   
                   <div className="flex flex-col gap-2 ml-6">
                     {application.resumeUrl && (
-                      <Button variant="outline" size="sm" asChild>
-                        <a href={getFileUrl(application.resumeUrl)} target="_blank" rel="noopener noreferrer">
-                          <Download className="h-4 w-4 mr-1" />
-                          Download Resume
-                        </a>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const url = getFileUrl(application.resumeUrl);
+                          console.log('Download clicked:', {
+                            originalUrl: application.resumeUrl,
+                            generatedUrl: url
+                          });
+                          
+                          // Test if the file exists
+                          fetch(url, { method: 'HEAD' })
+                            .then(response => {
+                              if (response.ok) {
+                                window.open(url, '_blank');
+                              } else {
+                                console.error('File not found:', url);
+                                toast.error('Resume file not found');
+                              }
+                            })
+                            .catch(error => {
+                              console.error('Error accessing file:', error);
+                              toast.error('Error accessing resume file');
+                            });
+                        }}
+                      >
+                        <Download className="h-4 w-4 mr-1" />
+                        Download Resume
                       </Button>
                     )}
                     
