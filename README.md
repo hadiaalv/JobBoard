@@ -113,7 +113,7 @@ JWT_EXPIRES_IN="7d"
 # Server Configuration
 PORT=3001
 NODE_ENV="development"
-FRONTEND_URL="http://localhost:3000"
+FRONTEND_URL="http://localhost:3001"
 
 # File Upload Configuration
 UPLOAD_DEST="./uploads"
@@ -128,7 +128,7 @@ SMTP_PASS="your-app-password"
 SMTP_FROM="noreply@jobboard.com"
 
 # CORS Configuration
-CORS_ORIGIN="http://localhost:3000"
+CORS_ORIGIN="http://localhost:3001"
 ```
 
 ### Frontend (.env.local)
@@ -139,7 +139,7 @@ NEXT_PUBLIC_API_URL="http://localhost:3001/api"
 
 # Next.js Configuration
 NEXT_PUBLIC_APP_NAME="JobBoard"
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
+NEXT_PUBLIC_APP_URL="http://localhost:3001"
 ```
 
 ##  API Endpoints

@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { Request, Response, NextFunction } from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -17,8 +18,17 @@ async function bootstrap() {
     credentials: true,
   });
 
+  // Serve static files with proper content-type headers
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
+    setHeaders: (res, path) => {
+      if (path.endsWith('.pdf')) {
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="' + path.split('/').pop() + '"');
+      } else if (path.match(/\.(jpg|jpeg|png|gif)$/)) {
+        res.setHeader('Content-Type', `image/${path.split('.').pop()}`);
+      }
+    },
   });
 
   app.useGlobalPipes(

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, getDownloadUrl } from "@/lib/utils";
 
 export default function ProfilePage() {
   const { user, updateUser, initializeAuth, isAuthenticated } = useAuthStore();
@@ -276,7 +276,7 @@ export default function ProfilePage() {
                 <div className="mb-2 p-2 bg-gray-50 rounded border">
                   <p className="text-sm text-gray-600">Current resume:</p>
                   <a 
-                    href={getFileUrl(user.resume)}
+                    href={getDownloadUrl(user.resume)}
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-primary hover:underline text-sm"

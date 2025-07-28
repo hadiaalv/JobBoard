@@ -1,30 +1,26 @@
-import { Controller, Post, Get, UseGuards, UseInterceptors, UploadedFile, Body, Request, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UseGuards, Request, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../common/guards/roles.guard';
-import { Roles } from '../common/decorators/roles.decorator';
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { UpdateApplicationStatusDto } from './dto/update-application-status.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from '../users/entities/user.entity';
+import { UploadService } from '../upload/upload.service';
 
 @Controller('applications')
+@UseGuards(JwtAuthGuard)
 export class ApplicationsController {
-  constructor(private readonly applicationsService: ApplicationsService) {}
+  constructor(
+    private readonly applicationsService: ApplicationsService,
+    private readonly uploadService: UploadService,
+  ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(UserRole.JOB_SEEKER)
-  @UseInterceptors(FileInterceptor('resume', {
-    dest: './uploads/resumes',
-    fileFilter: (req, file, cb) => {
-      if (file.mimetype === 'application/pdf') {
-        cb(null, true);
-      } else {
-        cb(new Error('Only PDF files are allowed'), false);
-      }
-    },
-  }))
+  @UseInterceptors(FileInterceptor('resume'))
   async create(
     @Body() createApplicationDto: CreateApplicationDto,
     @Request() req,
@@ -39,49 +35,51 @@ export class ApplicationsController {
     });
     
     if (!createApplicationDto.jobId) {
-      throw new Error('jobId is required');
+      throw new BadRequestException('jobId is required');
+    }
+
+    // Validate file if provided
+    if (file) {
+      if (file.mimetype !== 'application/pdf') {
+        throw new BadRequestException('Only PDF files are allowed for resumes');
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        throw new BadRequestException('File size must be less than 5MB');
+      }
     }
     
     return this.applicationsService.create(createApplicationDto, req.user, file);
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(UserRole.JOB_SEEKER)
-  async findMyApplications(@Request() req) {
+  findMyApplications(@Request() req) {
     return this.applicationsService.findByApplicant(req.user.id);
   }
 
   @Get('employer')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(UserRole.EMPLOYER)
-  async findEmployerApplications(@Request() req) {
+  findEmployerApplications(@Request() req) {
     return this.applicationsService.findByEmployer(req.user.id);
   }
 
-  @Get('job/:jobId')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('job/:id')
+  @UseGuards(RolesGuard)
   @Roles(UserRole.EMPLOYER)
-  async findApplicationsByJob(@Param('jobId') jobId: string, @Request() req) {
-    return this.applicationsService.findByJob(jobId, req.user.id);
+  findJobApplications(@Param('id') id: string, @Request() req) {
+    return this.applicationsService.findByJob(id, req.user.id);
   }
 
   @Patch(':id/status')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(UserRole.EMPLOYER)
-  async updateApplicationStatus(
+  updateStatus(
     @Param('id') id: string,
     @Body() updateStatusDto: UpdateApplicationStatusDto,
     @Request() req,
   ) {
     return this.applicationsService.updateStatus(id, updateStatusDto, req.user.id);
-  }
-
-  @Post('test')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(UserRole.JOB_SEEKER)
-  async testCreate(@Body() body: any, @Request() req) {
-    console.log('Test endpoint received:', { body, user: req.user?.id });
-    return { message: 'Test successful', received: body };
   }
 }

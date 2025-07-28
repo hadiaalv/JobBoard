@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import api from "@/lib/api";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, getDownloadUrl } from "@/lib/utils";
 import { Application, Job } from "@/types";
 import { 
   Building, 
@@ -384,7 +384,7 @@ export default function JobApplicationsPage() {
                         variant="outline" 
                         size="sm"
                         onClick={() => {
-                          const url = getFileUrl(application.resumeUrl);
+                          const url = getDownloadUrl(application.resumeUrl);
                           console.log('Download clicked:', {
                             originalUrl: application.resumeUrl,
                             generatedUrl: url

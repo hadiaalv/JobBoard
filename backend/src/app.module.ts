@@ -2,9 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
 
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -43,33 +40,6 @@ import { Contact } from './contact/entities/contact.entity';
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 10,
-    }),
-
-    MulterModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        storage: diskStorage({
-          destination: configService.get<string>('UPLOAD_DEST') || './uploads',
-          filename: (req, file, cb) => {
-            const randomName = Array(32)
-              .fill(null)
-              .map(() => Math.floor(Math.random() * 16).toString(16))
-              .join('');
-            cb(null, `${randomName}${extname(file.originalname)}`);
-          },
-        }),
-        fileFilter: (req, file, cb) => {
-          if (file.mimetype === 'application/pdf') {
-            cb(null, true);
-          } else {
-            cb(new Error('Only PDF files are allowed'), false);
-          }
-        },
-        limits: {
-          fileSize: 5 * 1024 * 1024,
-        },
-      }),
-      inject: [ConfigService],
     }),
 
     AuthModule,

@@ -6,7 +6,7 @@ import { useAuthStore } from "@/stores/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import api from "@/lib/api";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, getDownloadUrl } from "@/lib/utils";
 import { Application } from "@/types";
 import { Building, MapPin, DollarSign, Calendar, FileText, Eye, Clock, CheckCircle, XCircle, User } from "lucide-react";
 import Link from "next/link";
@@ -324,7 +324,7 @@ export default function ApplicationsPage() {
                     </Button>
                     {application.resumeUrl && (
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={getFileUrl(application.resumeUrl)} target="_blank">
+                        <Link href={getDownloadUrl(application.resumeUrl)} target="_blank">
                           <FileText className="h-4 w-4 mr-1" />
                           View Resume
                         </Link>

@@ -14,7 +14,7 @@ export function getFileUrl(filePath: string): string {
     return filePath;
   }
   
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3002';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
   console.log('getFileUrl baseUrl:', baseUrl);
 
   // Normalize the path - replace backslashes with forward slashes
@@ -56,4 +56,30 @@ export function getFileUrl(filePath: string): string {
   const result = `${baseUrl}${normalizedPath.startsWith('/') ? '' : '/'}${normalizedPath}`;
   console.log('getFileUrl result (other):', result);
   return result;
+}
+
+export function getDownloadUrl(filePath: string): string {
+  if (!filePath) return '';
+  
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
+  
+  // Extract folder and filename from the path
+  let normalizedPath = filePath.replace(/\\/g, '/');
+  
+  if (normalizedPath.startsWith('/uploads/')) {
+    normalizedPath = normalizedPath.substring(8); // Remove '/uploads/'
+  } else if (normalizedPath.startsWith('./uploads/')) {
+    normalizedPath = normalizedPath.substring(10); // Remove './uploads/'
+  }
+  
+  // Split into folder and filename
+  const parts = normalizedPath.split('/');
+  if (parts.length >= 2) {
+    const folder = parts[0];
+    const filename = parts[1];
+    return `${baseUrl}/download/${folder}/${filename}`;
+  }
+  
+  // Fallback to regular file URL
+  return getFileUrl(filePath);
 }
