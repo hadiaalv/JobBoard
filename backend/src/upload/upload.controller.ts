@@ -1,7 +1,22 @@
-import { Controller, Post, UseInterceptors, UploadedFile, UseGuards, Request, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Param,
+  UseInterceptors,
+  UploadedFile,
+  UseGuards,
+  Request,
+  BadRequestException,
+  NotFoundException,
+  Res
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadService } from './upload.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Response } from 'express';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 @Controller('upload')
 @UseGuards(JwtAuthGuard)
@@ -16,7 +31,6 @@ export class UploadController {
     }
 
     const fileName = await this.uploadService.uploadAvatar(file);
-
     const cleanFileName = fileName.includes('/') ? fileName.split('/').pop() : fileName;
 
     return { fileName: cleanFileName, url: `/uploads/avatars/${cleanFileName}` };
@@ -30,9 +44,20 @@ export class UploadController {
     }
 
     const fileName = await this.uploadService.uploadResume(file);
-
     const cleanFileName = fileName.includes('/') ? fileName.split('/').pop() : fileName;
 
     return { fileName: cleanFileName, url: `/uploads/resumes/${cleanFileName}` };
+  }
+
+ 
+  @Get('download/resumes/:filename')
+  async downloadResume(@Param('filename') filename: string, @Res() res: Response) {
+    const filePath = join(process.cwd(), 'uploads', 'resumes', filename);
+
+    if (!existsSync(filePath)) {
+      throw new NotFoundException('File not found');
+    }
+
+    return res.download(filePath);
   }
 }
