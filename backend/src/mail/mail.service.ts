@@ -6,7 +6,6 @@ export class MailService {
   private transporter;
 
   constructor() {
-    // Only create transporter if SMTP settings are configured
     if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
       this.transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,

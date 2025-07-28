@@ -38,7 +38,6 @@ export class ApplicationsController {
       headers: req.headers
     });
     
-    // Validate jobId format
     if (!createApplicationDto.jobId) {
       throw new Error('jobId is required');
     }
@@ -78,7 +77,6 @@ export class ApplicationsController {
     return this.applicationsService.updateStatus(id, updateStatusDto, req.user.id);
   }
 
-  // Test endpoint for debugging
   @Post('test')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.JOB_SEEKER)

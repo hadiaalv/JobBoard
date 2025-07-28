@@ -1,4 +1,3 @@
-// src/app/(auth)/login/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -43,9 +42,8 @@ export default function LoginPage() {
     try {
       await login(data)
       toast.success('Welcome back!')
-      router.push('/profile') // Redirect to profile after login
+      router.push('/profile')
     } catch (error) {
-      // Error is handled by the store and API interceptor
     } finally {
       setIsSubmitting(false)
     }

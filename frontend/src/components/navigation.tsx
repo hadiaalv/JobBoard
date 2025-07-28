@@ -56,7 +56,6 @@ export function Navigation() {
               <h1 className="text-2xl font-bold text-primary">JobBoard</h1>
             </Link>
             
-            {/* Desktop Navigation */}
             <div className="hidden md:ml-10 md:flex md:space-x-8">
               {navItems.map((item) => {
                 const Icon = item.icon
@@ -78,7 +77,6 @@ export function Navigation() {
             </div>
           </div>
 
-          {/* Desktop Auth Buttons */}
           <div className="hidden md:flex md:items-center md:space-x-4">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
@@ -108,7 +106,6 @@ export function Navigation() {
             )}
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <Button
               variant="ghost"
@@ -124,7 +121,6 @@ export function Navigation() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1">

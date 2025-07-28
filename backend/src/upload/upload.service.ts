@@ -8,7 +8,6 @@ export class UploadService {
   async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
     const uploadDir = join(process.cwd(), 'uploads', folder);
     
-   
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
@@ -18,17 +17,15 @@ export class UploadService {
     
     await writeFile(filePath, file.buffer);
     
-    return fileName; // Just return the filename, not the full path
+    return fileName;
   }
 
   async uploadAvatar(file: Express.Multer.File): Promise<string> {
-   
     const fileName = await this.uploadFile(file, 'avatars');
     return fileName;
   }
 
   async uploadResume(file: Express.Multer.File): Promise<string> {
-  
     const fileName = await this.uploadFile(file, 'resumes');
     return fileName;
   }

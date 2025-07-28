@@ -1,5 +1,4 @@
 import Link from 'next/link'
-// import { Navigation } from '@/components/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { 
@@ -14,9 +13,6 @@ import {
 export default function HomePage() {
   return (
     <>
-      {/* <Navigation /> */}
-      
-      {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-50 via-white to-cyan-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
@@ -45,7 +41,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -69,7 +64,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -157,11 +151,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Sections */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12">
-            {/* For Job Seekers */}
             <Card className="p-8 bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
               <CardHeader className="text-center pb-6">
                 <div className="mx-auto bg-blue-500 w-16 h-16 rounded-full flex items-center justify-center mb-4">
@@ -199,7 +191,6 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            {/* For Employers */}
             <Card className="p-8 bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
               <CardHeader className="text-center pb-6">
                 <div className="mx-auto bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mb-4">
@@ -240,7 +231,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">

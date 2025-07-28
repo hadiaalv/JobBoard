@@ -17,14 +17,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  @Throttle(3, 60) // 3 requests per 60 seconds
+  @Throttle(3, 60)
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
   @UseGuards(AuthGuard('local'))
-  @Throttle(5, 60) // 5 requests per 60 seconds
+  @Throttle(5, 60)
   async login(@Request() req: any) {
     return this.authService.login(req.user);
   }

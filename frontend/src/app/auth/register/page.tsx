@@ -62,7 +62,6 @@ export default function RegisterPage() {
       toast.success('Account created successfully!')
       router.push('/dashboard')
     } catch (error) {
-      // Error is handled by the store and API interceptor
     } finally {
       setIsSubmitting(false)
     }
@@ -84,7 +83,6 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Role Selection */}
             <div className="space-y-3">
               <Label>I am a...</Label>
               <div className="grid grid-cols-2 gap-3">

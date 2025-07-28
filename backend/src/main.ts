@@ -17,12 +17,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/uploads/',
   });
 
-  // Enable global validation pipes
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -32,7 +30,6 @@ async function bootstrap() {
   );
 
   app.setGlobalPrefix('api');
-
 
   const port = configService.get<number>('PORT') || process.env.PORT || 3002;
   await app.listen(port);

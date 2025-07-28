@@ -18,7 +18,6 @@ export class ContactService {
     const contact = this.contactRepository.create(createContactDto);
     const savedContact = await this.contactRepository.save(contact);
 
-    // Send confirmation email to the contact
     try {
       await this.mailService.sendContactConfirmationEmail(
         contact.email,
@@ -26,10 +25,8 @@ export class ContactService {
       );
     } catch (error) {
       console.error('Failed to send contact confirmation email:', error);
-      // Don't fail the contact creation if email fails
     }
 
-    // Send notification email to admin (you can configure admin email in env)
     try {
       const adminEmail = process.env.ADMIN_EMAIL || 'admin@jobboard.com';
       await this.mailService.sendContactNotificationEmail(
@@ -67,7 +64,6 @@ export class ContactService {
   async update(id: string, updateContactDto: UpdateContactDto): Promise<Contact> {
     const contact = await this.findOne(id);
 
-    // If status is being updated to REPLIED, set repliedAt and repliedBy
     if (updateContactDto.status === ContactStatus.REPLIED && !contact.repliedAt) {
       updateContactDto.repliedAt = new Date().toISOString();
     }

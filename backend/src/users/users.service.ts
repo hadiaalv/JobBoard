@@ -41,19 +41,16 @@ export class UsersService {
   async updateWithFiles(id: string, updateUserDto: UpdateUserDto, avatar?: Express.Multer.File, resume?: Express.Multer.File) {
     const user = await this.findOne(id);
     
-    // Handle avatar upload
     if (avatar) {
       const avatarUrl = await this.uploadService.uploadAvatar(avatar);
       user.avatar = avatarUrl;
     }
     
-    // Handle resume upload
     if (resume) {
       const resumeUrl = await this.uploadService.uploadResume(resume);
       user.resume = resumeUrl;
     }
     
-    // Update other fields
     Object.assign(user, updateUserDto);
     
     return this.userRepository.save(user);

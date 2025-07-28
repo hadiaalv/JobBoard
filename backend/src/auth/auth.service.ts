@@ -41,7 +41,7 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
     return {
       token,
-      access_token: token, // Keep both for compatibility
+      access_token: token,
       user,
     };
   }
@@ -54,7 +54,6 @@ export class AuthService {
         password: hashedPassword,
       });
       
-      // Send welcome email
       try {
         await this.mailService.sendRegistrationEmail(
           user.email,
@@ -62,10 +61,8 @@ export class AuthService {
         );
       } catch (error) {
         console.error('Failed to send registration email:', error);
-        // Don't fail registration if email fails
       }
       
-      // Return the same format as login for consistency
       return this.login(user);
     } catch (error) {
       if (error.code === '23505' && error.constraint?.includes('email')) {

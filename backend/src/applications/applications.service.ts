@@ -28,7 +28,6 @@ export class ApplicationsService {
     user: User,
     file?: Express.Multer.File,
   ): Promise<Application> {
-    // Check if user already applied to this job
     const existingApplication = await this.applicationRepository.findOne({
       where: {
         applicant: { id: user.id },
@@ -40,7 +39,6 @@ export class ApplicationsService {
       throw new ForbiddenException('You have already applied to this job');
     }
 
-    // Get the job
     const job = await this.jobRepository.findOne({
       where: { id: createApplicationDto.jobId },
     });
@@ -58,16 +56,13 @@ export class ApplicationsService {
 
     const savedApplication = await this.applicationRepository.save(application);
 
-    // Send email notifications
     try {
-      // Email to applicant
       await this.mailService.sendApplicationEmail(
         user.email,
         job.title,
         job.company
       );
 
-      // Email to employer
       if (job.postedBy) {
         await this.mailService.sendNewApplicationNotificationEmail(
           job.postedBy.email,
@@ -78,7 +73,6 @@ export class ApplicationsService {
       }
     } catch (error) {
       console.error('Failed to send email notifications:', error);
-      // Don't fail the application creation if email fails
     }
 
     return savedApplication;
@@ -101,7 +95,6 @@ export class ApplicationsService {
   }
 
   async findByJob(jobId: string, employerId: string): Promise<Application[]> {
-    // Verify the job belongs to the employer
     const job = await this.jobRepository.findOne({
       where: { id: jobId, postedBy: { id: employerId } },
     });
@@ -140,7 +133,6 @@ export class ApplicationsService {
 
     const savedApplication = await this.applicationRepository.save(application);
 
-    // Send email notification to applicant about status update
     try {
       await this.mailService.sendApplicationStatusUpdateEmail(
         application.applicant.email,
@@ -151,7 +143,6 @@ export class ApplicationsService {
       );
     } catch (error) {
       console.error('Failed to send status update email:', error);
-      // Don't fail the status update if email fails
     }
 
     return savedApplication;

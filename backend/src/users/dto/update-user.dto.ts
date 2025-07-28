@@ -22,6 +22,4 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   bio?: string;
-
-  // Add other properties as needed
 } 

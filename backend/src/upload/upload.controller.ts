@@ -15,10 +15,8 @@ export class UploadController {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Expecting just the filename from service
     const fileName = await this.uploadService.uploadAvatar(file);
 
-    // If service returns path, extract filename
     const cleanFileName = fileName.includes('/') ? fileName.split('/').pop() : fileName;
 
     return { fileName: cleanFileName, url: `/uploads/avatars/${cleanFileName}` };
@@ -31,10 +29,8 @@ export class UploadController {
       throw new BadRequestException('No file uploaded');
     }
 
-    // Expecting just the filename from service
     const fileName = await this.uploadService.uploadResume(file);
 
-    // Clean up if full path accidentally returned
     const cleanFileName = fileName.includes('/') ? fileName.split('/').pop() : fileName;
 
     return { fileName: cleanFileName, url: `/uploads/resumes/${cleanFileName}` };

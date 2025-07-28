@@ -1,4 +1,3 @@
-// src/jobs/jobs.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JobsController } from './jobs.controller';

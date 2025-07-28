@@ -8,7 +8,6 @@ export function cn(...inputs: ClassValue[]) {
 export function getFileUrl(filePath: string): string {
   if (!filePath) return '';
   
-  
   if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
     return filePath;
   }

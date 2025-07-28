@@ -24,7 +24,7 @@ export class ContactController {
   constructor(private readonly contactService: ContactService) {}
 
   @Post()
-  @Throttle(3, 300) // 3 requests per 5 minutes
+  @Throttle(3, 300)
   create(@Body() createContactDto: CreateContactDto) {
     return this.contactService.create(createContactDto);
   }
@@ -58,7 +58,6 @@ export class ContactController {
     @Body() updateContactDto: UpdateContactDto,
     @Request() req,
   ) {
-    // Add the admin user info to the update
     if (updateContactDto.status === 'replied' && !updateContactDto.repliedBy) {
       updateContactDto.repliedBy = `${req.user.firstName} ${req.user.lastName}`;
     }

@@ -2,6 +2,8 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
+export const ROLES_KEY = 'roles';
+
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {}
 
@@ -23,5 +25,3 @@ export class RolesGuard implements CanActivate {
     return requiredRoles.some((role) => user.role?.includes(role));
   }
 }
-
-export const ROLES_KEY = 'roles';
