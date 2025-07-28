@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import api from "@/lib/api";
+import { getFileUrl } from "@/lib/utils";
 import { Application, Job } from "@/types";
 import { 
   Building, 
@@ -380,7 +381,7 @@ export default function JobApplicationsPage() {
                   <div className="flex flex-col gap-2 ml-6">
                     {application.resumeUrl && (
                       <Button variant="outline" size="sm" asChild>
-                        <a href={application.resumeUrl} target="_blank" rel="noopener noreferrer">
+                        <a href={getFileUrl(application.resumeUrl)} target="_blank" rel="noopener noreferrer">
                           <Download className="h-4 w-4 mr-1" />
                           Download Resume
                         </a>

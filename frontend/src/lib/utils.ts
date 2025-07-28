@@ -1,4 +1,4 @@
-import { clsx, type ClassValue } from "clsx"
+import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,13 +13,21 @@ export function getFileUrl(filePath: string): string {
     return filePath;
   }
   
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3002';
+  
   // If it starts with /uploads/, construct the full URL
   if (filePath.startsWith('/uploads/')) {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
     return `${baseUrl}${filePath}`;
   }
   
+  // If it contains uploads in the path (like ./uploads/resumes/filename.pdf)
+  if (filePath.includes('uploads/')) {
+    // Extract the part after 'uploads/'
+    const uploadsIndex = filePath.indexOf('uploads/');
+    const relativePath = filePath.substring(uploadsIndex);
+    return `${baseUrl}/${relativePath}`;
+  }
+  
   // If it's just a filename, assume it's in uploads
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001';
   return `${baseUrl}/uploads/${filePath}`;
 }
