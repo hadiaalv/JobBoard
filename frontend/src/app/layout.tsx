@@ -6,7 +6,7 @@ import { Navigation } from '@/components/navigation';
 
 export const metadata: Metadata = {
   title: 'JobBoard',
-  description: 'Your app description',
+  description: 'Find Jobs, Post Jobs, and Manage Applications',
 }
 
 export default function RootLayout({
