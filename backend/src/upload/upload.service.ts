@@ -8,7 +8,7 @@ export class UploadService {
   async uploadFile(file: Express.Multer.File, folder: string): Promise<string> {
     const uploadDir = join(process.cwd(), 'uploads', folder);
     
-    // Create directory if it doesn't exist
+   
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
@@ -18,16 +18,18 @@ export class UploadService {
     
     await writeFile(filePath, file.buffer);
     
-    return fileName;
+    return fileName; // Just return the filename, not the full path
   }
 
   async uploadAvatar(file: Express.Multer.File): Promise<string> {
+   
     const fileName = await this.uploadFile(file, 'avatars');
-    return `/uploads/avatars/${fileName}`;
+    return fileName;
   }
 
   async uploadResume(file: Express.Multer.File): Promise<string> {
+  
     const fileName = await this.uploadFile(file, 'resumes');
-    return `/uploads/resumes/${fileName}`;
+    return fileName;
   }
-} 
+}
