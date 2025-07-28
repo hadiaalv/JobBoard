@@ -2,7 +2,7 @@
 
 A modern job board platform built with NestJS (backend) and Next.js (frontend) supporting both employers and job seekers.
 
-## 🚀 Features
+##  Features
 
 ### For Job Seekers
 - Browse and search job listings
@@ -27,7 +27,7 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 - Responsive design
 - TypeScript support
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Backend
 - **Framework**: NestJS
@@ -53,7 +53,7 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 - PostgreSQL 12+
 - npm or yarn
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Clone the Repository
 
@@ -69,12 +69,6 @@ cd backend
 
 # Install dependencies
 npm install
-
-# Copy environment file
-cp env.example .env
-
-# Update .env with your configuration
-# See Environment Variables section below
 
 # Generate Prisma client
 npx prisma generate
@@ -94,22 +88,17 @@ cd frontend
 # Install dependencies
 npm install
 
-# Copy environment file
-cp env.example .env.local
-
-# Update .env.local with your configuration
-
 # Start development server
 npm run dev
 ```
 
 ### 4. Access the Application
 
-- Frontend: http://localhost:3000
+- Frontend: http://localhost:3001
 - Backend API: http://localhost:3001/api
-- API Documentation: http://localhost:3001/api/docs
 
-## 🔧 Environment Variables
+
+##  Environment Variables
 
 ### Backend (.env)
 
@@ -153,7 +142,7 @@ NEXT_PUBLIC_APP_NAME="JobBoard"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 ```
 
-## 📚 API Endpoints
+##  API Endpoints
 
 ### Authentication
 - `POST /api/auth/register` - Register new user
@@ -237,80 +226,10 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 - updatedAt (TIMESTAMP)
 ```
 
-## 🚀 Deployment
 
-### Backend Deployment (Render/Railway)
 
-1. **Set up PostgreSQL database**
-2. **Configure environment variables**
-3. **Deploy using Git integration**
 
-```bash
-# Build command
-npm run build
-
-# Start command
-npm run start:prod
-```
-
-### Frontend Deployment (Vercel)
-
-1. **Connect GitHub repository**
-2. **Configure environment variables**
-3. **Deploy automatically on push**
-
-```bash
-# Build command
-npm run build
-
-# Output directory
-.next
-```
-
-### Environment Variables for Production
-
-#### Backend
-```env
-DATABASE_URL="your-production-database-url"
-JWT_SECRET="your-production-jwt-secret"
-NODE_ENV="production"
-FRONTEND_URL="https://your-frontend-domain.com"
-```
-
-#### Frontend
-```env
-NEXT_PUBLIC_API_URL="https://your-backend-domain.com/api"
-NEXT_PUBLIC_APP_URL="https://your-frontend-domain.com"
-```
-
-## 🧪 Testing
-
-### Backend Tests
-```bash
-cd backend
-
-# Unit tests
-npm run test
-
-# E2E tests
-npm run test:e2e
-
-# Test coverage
-npm run test:cov
-```
-
-### Frontend Tests
-```bash
-cd frontend
-
-# Run tests
-npm run test
-
-# Run tests with coverage
-npm run test:coverage
-```
-
-## 📁 Project Structure
+##  Project Structure
 
 ```
 job-board/
@@ -334,36 +253,3 @@ job-board/
 │   │   └── types/          # TypeScript types
 │   └── public/             # Static assets
 └── README.md
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](https://github.com/your-repo/issues) page
-2. Create a new issue with detailed information
-3. Contact the development team
-
-## 🔄 Updates and Maintenance
-
-- Keep dependencies updated regularly
-- Monitor security vulnerabilities
-- Backup database regularly
-- Monitor application performance
-- Update documentation as needed
-
----
-
-**Built with ❤️ using NestJS and Next.js** 
