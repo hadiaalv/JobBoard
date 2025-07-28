@@ -24,7 +24,12 @@ async function bootstrap() {
     setHeaders: (res, path) => {
       if (path.endsWith('.pdf')) {
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'inline; filename="' + path.split('/').pop() + '"');
+        // For resumes, set attachment disposition to force download
+        if (path.includes('/resumes/')) {
+          res.setHeader('Content-Disposition', 'attachment; filename="' + path.split('/').pop() + '"');
+        } else {
+          res.setHeader('Content-Disposition', 'inline; filename="' + path.split('/').pop() + '"');
+        }
       } else if (path.match(/\.(jpg|jpeg|png|gif)$/)) {
         res.setHeader('Content-Type', `image/${path.split('.').pop()}`);
       }
