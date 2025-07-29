@@ -37,20 +37,37 @@ model jobs {
 }
 
 model users {
-  id           String          @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  email        String          @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
-  password     String          @db.VarChar
-  firstName    String          @db.VarChar
-  lastName     String          @db.VarChar
-  role         users_role_enum @default(job_seeker)
-  company      String?         @db.VarChar
-  bio          String?
-  skills       String?
-  experience   String?         @db.VarChar
-  createdAt    DateTime        @default(now()) @db.Timestamp(6)
-  updatedAt    DateTime        @default(now()) @db.Timestamp(6)
-  applications applications[]
-  jobs         jobs[]
+  id                   String          @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                String          @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
+  password             String          @db.VarChar
+  firstName            String          @db.VarChar
+  lastName             String          @db.VarChar
+  role                 users_role_enum @default(job_seeker)
+  company              String?         @db.VarChar
+  bio                  String?
+  skills               String?
+  experience           String?         @db.VarChar
+  avatar               String?         @db.VarChar
+  resume               String?         @db.VarChar
+  location             String?         @db.VarChar
+  phone                String?         @db.VarChar
+  website              String?         @db.VarChar
+  education            String?         @db.VarChar
+  interests            String?
+  languages            String?
+  certifications       String?
+  projects             String?
+  linkedin             String?         @db.VarChar
+  github               String?         @db.VarChar
+  portfolio            String?         @db.VarChar
+  yearsOfExperience    Int?
+  preferredWorkType    String?         @db.VarChar
+  salaryExpectation    String?         @db.VarChar
+  availability         String?
+  createdAt            DateTime        @default(now()) @db.Timestamp(6)
+  updatedAt            DateTime        @default(now()) @db.Timestamp(6)
+  applications         applications[]
+  jobs                 jobs[]
 }
 
 enum applications_status_enum {

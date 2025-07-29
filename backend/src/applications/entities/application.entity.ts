@@ -25,8 +25,7 @@ export class Application {
   resumeUrl: string;
 
   @Column({
-    type: 'enum',
-    enum: ApplicationStatus,
+    type: 'varchar',
     default: ApplicationStatus.PENDING,
   })
   status: ApplicationStatus;

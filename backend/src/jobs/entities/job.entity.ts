@@ -35,15 +35,13 @@ export class Job {
   salaryMax?: number;
 
   @Column({ 
-    type: 'enum', 
-    enum: ['full_time', 'part_time', 'contract', 'internship', 'freelance'],
+    type: 'varchar',
     default: 'full_time'
   })
   type: string;
 
   @Column({ 
-    type: 'enum', 
-    enum: ['entry', 'mid', 'senior', 'lead', 'executive'],
+    type: 'varchar',
     default: 'mid'
   })
   experienceLevel: string;

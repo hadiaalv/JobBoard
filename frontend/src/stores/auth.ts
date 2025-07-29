@@ -67,16 +67,32 @@ export const useAuthStore = create<AuthStore>()(
           
           Object.keys(data).forEach(key => {
             if (data[key] !== undefined && data[key] !== null) {
-              formData.append(key, data[key]);
+              // Handle skills specifically - convert array to comma-separated string
+              if (key === 'skills' && Array.isArray(data[key])) {
+                const skillsString = data[key].join(',');
+                console.log(`Auth store: Adding skills as string:`, skillsString);
+                formData.append(key, skillsString);
+              } else {
+                console.log(`Auth store: Adding field ${key}:`, data[key]);
+                formData.append(key, data[key]);
+              }
             }
           });
           
           if (avatar) {
+            console.log('Auth store: Adding avatar file:', avatar.name);
             formData.append('avatar', avatar);
           }
           
           if (resume) {
+            console.log('Auth store: Adding resume file:', resume.name);
             formData.append('resume', resume);
+          }
+          
+          // Log all FormData entries
+          console.log('Auth store: FormData entries:');
+          for (let [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
           }
           
           const response = await api.patch<User>('/users/me', formData, {
@@ -91,6 +107,8 @@ export const useAuthStore = create<AuthStore>()(
           return updatedUser;
         } catch (error) {
           console.error('Auth store: Update user error:', error);
+          console.error('Auth store: Error response:', error.response?.data);
+          console.error('Auth store: Error status:', error.response?.status);
           throw error;
         }
       },

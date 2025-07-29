@@ -34,8 +34,7 @@ export class Contact {
   phone?: string;
 
   @Column({
-    type: 'enum',
-    enum: ContactStatus,
+    type: 'varchar',
     default: ContactStatus.PENDING,
   })
   status: ContactStatus;

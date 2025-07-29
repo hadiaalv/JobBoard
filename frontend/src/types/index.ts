@@ -13,6 +13,18 @@ export interface User {
   website?: string;
   skills?: string[];
   experience?: string;
+  education?: string;
+  interests?: string;
+  languages?: string;
+  certifications?: string;
+  projects?: string;
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  yearsOfExperience?: number;
+  preferredWorkType?: string;
+  salaryExpectation?: string;
+  availability?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -120,6 +132,18 @@ export interface UpdateUserData {
   website?: string;
   skills?: string[];
   experience?: string;
+  education?: string;
+  interests?: string;
+  languages?: string;
+  certifications?: string;
+  projects?: string;
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  yearsOfExperience?: number;
+  preferredWorkType?: string;
+  salaryExpectation?: string;
+  availability?: string;
 }
 
 export interface UpdateJobData {

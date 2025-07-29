@@ -54,14 +54,11 @@ export class AuthService {
         password: hashedPassword,
       });
       
-      try {
-        await this.mailService.sendRegistrationEmail(
-          user.email,
-          user.firstName
-        );
-      } catch (error) {
-        console.error('Failed to send registration email:', error);
-      }
+      // Send email notification (non-blocking)
+      this.mailService.sendRegistrationEmail(user.email, user.firstName)
+        .catch(error => {
+          console.log('Email sending failed (non-critical):', error.message);
+        });
       
       return this.login(user);
     } catch (error) {

@@ -20,10 +20,24 @@ const jobSeekerRoutes = [
   '/dashboard/applications'
 ]
 
+// Simple JWT decode function (for client-side middleware)
+function decodeJWT(token: string) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (error) {
+    console.error('Error decoding JWT:', error);
+    return null;
+  }
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get('auth-token')
-  
   
   const isProtectedRoute = protectedRoutes.some(route => 
     pathname.startsWith(route)
@@ -34,7 +48,32 @@ export function middleware(request: NextRequest) {
     loginUrl.searchParams.set('redirect', pathname)
     return NextResponse.redirect(loginUrl)
   }
-  
+
+  // Role-based route protection
+  if (token) {
+    const decoded = decodeJWT(token.value);
+    if (decoded && decoded.user) {
+      const userRole = decoded.user.role;
+      
+      // Check employer routes
+      const isEmployerRoute = employerRoutes.some(route => 
+        pathname.startsWith(route)
+      );
+      if (isEmployerRoute && userRole !== 'employer') {
+        console.log(`Access denied: ${userRole} trying to access employer route ${pathname}`);
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+      
+      // Check job seeker routes
+      const isJobSeekerRoute = jobSeekerRoutes.some(route => 
+        pathname.startsWith(route)
+      );
+      if (isJobSeekerRoute && userRole !== 'job_seeker') {
+        console.log(`Access denied: ${userRole} trying to access job seeker route ${pathname}`);
+        return NextResponse.redirect(new URL('/dashboard', request.url));
+      }
+    }
+  }
 
   if (token && (pathname.startsWith('/auth/login') || pathname.startsWith('/auth/register'))) {
     return NextResponse.redirect(new URL('/dashboard', request.url))

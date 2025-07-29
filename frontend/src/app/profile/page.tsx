@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth";
-import { getFileUrl, getDownloadUrl } from "@/lib/utils";
+import { getFileUrl, getDownloadUrl, getAvatarUrl } from "@/lib/utils";
+import PortfolioSection from "@/components/portfolio-section";
 
 export default function ProfilePage() {
   const { user, updateUser, initializeAuth, isAuthenticated } = useAuthStore();
@@ -12,6 +13,23 @@ export default function ProfilePage() {
     lastName: "",
     email: "",
     bio: "",
+    location: "",
+    phone: "",
+    website: "",
+    skills: [] as string[],
+    experience: "",
+    education: "",
+    interests: "",
+    languages: "",
+    certifications: "",
+    projects: "",
+    linkedin: "",
+    github: "",
+    portfolio: "",
+    yearsOfExperience: undefined as number | undefined,
+    preferredWorkType: "",
+    salaryExpectation: "",
+    availability: "",
   });
   const [editing, setEditing] = useState(false);
   const [originalForm, setOriginalForm] = useState({
@@ -19,6 +37,23 @@ export default function ProfilePage() {
     lastName: "",
     email: "",
     bio: "",
+    location: "",
+    phone: "",
+    website: "",
+    skills: [] as string[],
+    experience: "",
+    education: "",
+    interests: "",
+    languages: "",
+    certifications: "",
+    projects: "",
+    linkedin: "",
+    github: "",
+    portfolio: "",
+    yearsOfExperience: undefined as number | undefined,
+    preferredWorkType: "",
+    salaryExpectation: "",
+    availability: "",
   });
   const [avatar, setAvatar] = useState<File | null>(null);
   const [resume, setResume] = useState<File | null>(null);
@@ -49,6 +84,23 @@ export default function ProfilePage() {
         lastName: user.lastName || "",
         email: user.email || "",
         bio: user.bio || "",
+        location: user.location || "",
+        phone: user.phone || "",
+        website: user.website || "",
+        skills: user.skills || [],
+        experience: user.experience || "",
+        education: user.education || "",
+        interests: user.interests || "",
+        languages: user.languages || "",
+        certifications: user.certifications || "",
+        projects: user.projects || "",
+        linkedin: user.linkedin || "",
+        github: user.github || "",
+        portfolio: user.portfolio || "",
+        yearsOfExperience: user.yearsOfExperience,
+        preferredWorkType: user.preferredWorkType || "",
+        salaryExpectation: user.salaryExpectation || "",
+        availability: user.availability || "",
       };
       setForm(updated);
       setOriginalForm(updated);
@@ -56,12 +108,18 @@ export default function ProfilePage() {
     }
   }, [user, isAuthenticated, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     if (!editing) return;
     
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
     console.log("Profile page: Form field changed", name, value);
+  };
+
+  const handleSkillsChange = (skills: string[]) => {
+    if (!editing) return;
+    setForm(prev => ({ ...prev, skills }));
+    console.log("Profile page: Skills changed", skills);
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,6 +159,23 @@ export default function ProfilePage() {
         form.firstName !== originalForm.firstName ||
         form.lastName !== originalForm.lastName ||
         form.bio !== originalForm.bio ||
+        form.location !== originalForm.location ||
+        form.phone !== originalForm.phone ||
+        form.website !== originalForm.website ||
+        JSON.stringify(form.skills) !== JSON.stringify(originalForm.skills) ||
+        form.experience !== originalForm.experience ||
+        form.education !== originalForm.education ||
+        form.interests !== originalForm.interests ||
+        form.languages !== originalForm.languages ||
+        form.certifications !== originalForm.certifications ||
+        form.projects !== originalForm.projects ||
+        form.linkedin !== originalForm.linkedin ||
+        form.github !== originalForm.github ||
+        form.portfolio !== originalForm.portfolio ||
+        form.yearsOfExperience !== originalForm.yearsOfExperience ||
+        form.preferredWorkType !== originalForm.preferredWorkType ||
+        form.salaryExpectation !== originalForm.salaryExpectation ||
+        form.availability !== originalForm.availability ||
         avatar !== null ||
         resume !== null;
 
@@ -117,6 +192,23 @@ export default function ProfilePage() {
         firstName: form.firstName,
         lastName: form.lastName,
         bio: form.bio,
+        location: form.location,
+        phone: form.phone,
+        website: form.website,
+        skills: form.skills,
+        experience: form.experience,
+        education: form.education,
+        interests: form.interests,
+        languages: form.languages,
+        certifications: form.certifications,
+        projects: form.projects,
+        linkedin: form.linkedin,
+        github: form.github,
+        portfolio: form.portfolio,
+        yearsOfExperience: form.yearsOfExperience,
+        preferredWorkType: form.preferredWorkType,
+        salaryExpectation: form.salaryExpectation,
+        availability: form.availability,
       };
 
       console.log("Profile page: Calling updateUser with", updateData);
@@ -128,6 +220,23 @@ export default function ProfilePage() {
         lastName: form.lastName,
         email: form.email,
         bio: form.bio,
+        location: form.location,
+        phone: form.phone,
+        website: form.website,
+        skills: form.skills,
+        experience: form.experience,
+        education: form.education,
+        interests: form.interests,
+        languages: form.languages,
+        certifications: form.certifications,
+        projects: form.projects,
+        linkedin: form.linkedin,
+        github: form.github,
+        portfolio: form.portfolio,
+        yearsOfExperience: form.yearsOfExperience,
+        preferredWorkType: form.preferredWorkType,
+        salaryExpectation: form.salaryExpectation,
+        availability: form.availability,
       });
       
       setAvatar(null);
@@ -138,6 +247,7 @@ export default function ProfilePage() {
       setEditing(false);
     } catch (err: any) {
       console.error('Profile page: Update error:', err);
+      console.error('Profile page: Error response:', err.response?.data);
       setError(err.response?.data?.message || "Failed to update profile. Please try again.");
     } finally {
       setSubmitting(false);
@@ -165,7 +275,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4">
+    <div className="max-w-4xl mx-auto py-12 px-4">
       <h1 className="text-3xl font-bold mb-8">Profile</h1>
       <div className="bg-white p-8 rounded shadow space-y-8">
         {success && (
@@ -179,17 +289,27 @@ export default function ProfilePage() {
           </div>
         )}
 
+        {/* Basic Information Section */}
         <div className="flex flex-col md:flex-row gap-8 items-start">
           <div className="flex flex-col items-center gap-3">
             <div className="w-24 h-24 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center text-3xl font-bold text-primary overflow-hidden">
               {user?.avatar ? (
-                <img 
-                  src={getFileUrl(user.avatar)}
-                  alt={`${form.firstName} ${form.lastName}`}
+                <img
+                  src={getAvatarUrl(user.avatar)}
+                  alt="Avatar"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     console.error('Failed to load avatar:', user.avatar);
+                    console.error('Avatar URL attempted:', getFileUrl(user.avatar));
                     e.currentTarget.style.display = 'none';
+                    // Show fallback initials instead
+                    const parent = e.currentTarget.parentElement;
+                    if (parent) {
+                      parent.innerHTML = `${form.firstName.charAt(0)}${form.lastName.charAt(0)}`;
+                    }
+                  }}
+                  onLoad={() => {
+                    console.log('Avatar loaded successfully:', getFileUrl(user.avatar));
                   }}
                 />
               ) : (
@@ -296,6 +416,16 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Portfolio Section - Only show for job seekers */}
+        {user?.role === 'job_seeker' && (
+          <PortfolioSection
+            form={form}
+            editing={editing}
+            onChange={handleChange}
+            onSkillsChange={handleSkillsChange}
+          />
+        )}
 
         <div className="flex justify-end gap-4">
           {!editing ? (

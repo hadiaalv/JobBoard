@@ -1,146 +1,99 @@
 "use client";
 
 import { useAuthStore } from "@/stores/auth";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import api from "@/lib/api";
-import { useState } from "react";
-import toast from "react-hot-toast";
-import Cookies from "js-cookie";
+import { getFileUrl } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 export default function DebugPage() {
-  const { user, isAuthenticated, logout } = useAuthStore();
-  const [apiResponse, setApiResponse] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const { user, isAuthenticated } = useAuthStore();
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
+  const [avatarError, setAvatarError] = useState<string>("");
 
-  const testEndpoint = async (endpoint: string, method: 'GET' | 'POST' = 'GET', data?: any) => {
-    setLoading(true);
-    try {
-      const response = method === 'POST' 
-        ? await api.post(endpoint, data)
-        : await api.get(endpoint);
-      setApiResponse({ endpoint, success: true, data: response.data });
-      toast.success(`Success: ${endpoint}`);
-    } catch (error: any) {
-      setApiResponse({ 
-        endpoint, 
-        success: false, 
-        error: error.response?.data || error.message,
-        status: error.response?.status 
-      });
-      toast.error(`Error: ${endpoint} - ${error.response?.status || 'Network Error'}`);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (user?.avatar) {
+      const url = getFileUrl(user.avatar);
+      setAvatarUrl(url);
+      console.log("Debug: Avatar URL generated:", url);
     }
-  };
+  }, [user?.avatar]);
 
-  const clearAuth = () => {
-    logout();
-    toast.success("Auth cleared");
-  };
-
-  const showToken = () => {
-    const token = Cookies.get('auth-token');
-    alert(`Token: ${token || 'No token found'}`);
+  const testAvatarLoad = () => {
+    if (!user?.avatar) return;
+    
+    const img = new Image();
+    img.onload = () => {
+      console.log("Debug: Avatar loaded successfully");
+      setAvatarError("");
+    };
+    img.onerror = () => {
+      console.error("Debug: Avatar failed to load");
+      setAvatarError("Failed to load avatar");
+    };
+    img.src = avatarUrl;
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-8">Debug Information</h1>
+    <div className="container mx-auto p-8 space-y-6">
+      <h1 className="text-2xl font-bold">Debug Information</h1>
       
-      {/* Auth State */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Authentication State</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <p><strong>Is Authenticated:</strong> {isAuthenticated ? 'Yes' : 'No'}</p>
-            <p><strong>User ID:</strong> {user?.id || 'None'}</p>
-            <p><strong>User Email:</strong> {user?.email || 'None'}</p>
-            <p><strong>User Role:</strong> {user?.role || 'None'}</p>
-            <p><strong>User Name:</strong> {user?.firstName} {user?.lastName}</p>
-            <p><strong>Token Present:</strong> {Cookies.get('auth-token') ? 'Yes' : 'No'}</p>
-          </div>
-          
-          <div className="mt-4 space-x-2">
-            <Button onClick={showToken} variant="outline">Show Token</Button>
-            <Button onClick={clearAuth} variant="outline">Clear Auth</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="bg-gray-100 p-4 rounded">
+        <h2 className="text-lg font-semibold mb-2">User Information</h2>
+        <pre className="text-sm overflow-auto">
+          {JSON.stringify(user, null, 2)}
+        </pre>
+      </div>
 
-      {/* API Tests */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>API Endpoint Tests</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <Button 
-              onClick={() => testEndpoint('/users/me')} 
-              disabled={loading}
-              className="w-full"
-            >
-              Test /users/me
-            </Button>
-            
-            <Button 
-              onClick={() => testEndpoint('/applications/me')} 
-              disabled={loading}
-              className="w-full"
-            >
-              Test /applications/me (Job Seeker)
-            </Button>
-            
-            <Button 
-              onClick={() => testEndpoint('/applications/employer')} 
-              disabled={loading}
-              className="w-full"
-            >
-              Test /applications/employer (Employer)
-            </Button>
-            
-            <Button 
-              onClick={() => testEndpoint('/jobs/my-jobs')} 
-              disabled={loading}
-              className="w-full"
-            >
-              Test /jobs/my-jobs (Employer)
-            </Button>
-            
-            <Button 
-              onClick={() => testEndpoint('/applications/test', 'POST', { jobId: 'test-job-id', coverLetter: 'Test cover letter' })} 
-              disabled={loading}
-              className="w-full"
-            >
-              Test /applications/test (Job Seeker)
-            </Button>
+      <div className="bg-gray-100 p-4 rounded">
+        <h2 className="text-lg font-semibold mb-2">Avatar Debug</h2>
+        <p><strong>Original avatar path:</strong> {user?.avatar || "None"}</p>
+        <p><strong>Generated URL:</strong> {avatarUrl || "None"}</p>
+        {avatarError && <p className="text-red-500"><strong>Error:</strong> {avatarError}</p>}
+        
+        <button 
+          onClick={testAvatarLoad}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Test Avatar Load
+        </button>
+        
+        {avatarUrl && (
+          <div className="mt-4">
+            <h3 className="font-semibold">Avatar Preview:</h3>
+            <img 
+              src={avatarUrl} 
+              alt="Avatar preview" 
+              className="w-32 h-32 object-cover border rounded"
+              onError={(e) => {
+                console.error("Debug: Avatar preview failed");
+                setAvatarError("Preview failed to load");
+              }}
+            />
           </div>
-        </CardContent>
-      </Card>
+        )}
+      </div>
 
-      {/* API Response */}
-      {apiResponse && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Last API Response</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="bg-gray-100 p-4 rounded">
-              <p><strong>Endpoint:</strong> {apiResponse.endpoint}</p>
-              <p><strong>Success:</strong> {apiResponse.success ? 'Yes' : 'No'}</p>
-              {apiResponse.status && (
-                <p><strong>Status:</strong> {apiResponse.status}</p>
-              )}
-              <p><strong>Response:</strong></p>
-              <pre className="mt-2 text-sm overflow-auto">
-                {JSON.stringify(apiResponse.data || apiResponse.error, null, 2)}
-              </pre>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <div className="bg-gray-100 p-4 rounded">
+        <h2 className="text-lg font-semibold mb-2">Role-Based Access</h2>
+        <p><strong>User Role:</strong> {user?.role || "None"}</p>
+        <p><strong>Is Authenticated:</strong> {isAuthenticated ? "Yes" : "No"}</p>
+        
+        <div className="mt-4 space-y-2">
+          <h3 className="font-semibold">Available Routes:</h3>
+          <ul className="list-disc list-inside space-y-1">
+            <li><a href="/dashboard" className="text-blue-500 hover:underline">Dashboard</a></li>
+            <li><a href="/profile" className="text-blue-500 hover:underline">Profile</a></li>
+            {user?.role === 'employer' && (
+              <>
+                <li><a href="/dashboard/jobs" className="text-blue-500 hover:underline">My Jobs</a></li>
+                <li><a href="/jobs/create" className="text-blue-500 hover:underline">Post Job</a></li>
+              </>
+            )}
+            {user?.role === 'job_seeker' && (
+              <li><a href="/dashboard/applications" className="text-blue-500 hover:underline">My Applications</a></li>
+            )}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 } 

@@ -433,6 +433,13 @@ export default function JobApplicationsPage() {
                         Contact
                       </a>
                     </Button>
+
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/profile/${application.applicant.id}`}>
+                        <User className="h-4 w-4 mr-1" />
+                        View Profile
+                      </Link>
+                    </Button>
                   </div>
                 </div>
 

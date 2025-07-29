@@ -35,8 +35,7 @@ export class User {
   lastName: string;
 
   @Column({
-    type: 'enum',
-    enum: UserRole,
+    type: 'varchar',
     default: UserRole.JOB_SEEKER,
   })
   role: UserRole;
@@ -47,8 +46,8 @@ export class User {
   @Column({ type: 'text', nullable: true })
   bio?: string;
 
-  @Column({ type: 'simple-array', nullable: true })
-  skills?: string[];
+  @Column({ type: 'text', nullable: true })
+  skills?: string;
 
   @Column({ nullable: true })
   experience?: string;
@@ -58,6 +57,51 @@ export class User {
 
   @Column({ nullable: true })
   resume?: string;
+
+  @Column({ nullable: true })
+  location?: string;
+
+  @Column({ nullable: true })
+  phone?: string;
+
+  @Column({ nullable: true })
+  website?: string;
+
+  @Column({ nullable: true })
+  education?: string;
+
+  @Column({ nullable: true })
+  interests?: string;
+
+  @Column({ nullable: true })
+  languages?: string;
+
+  @Column({ nullable: true })
+  certifications?: string;
+
+  @Column({ nullable: true })
+  projects?: string;
+
+  @Column({ nullable: true })
+  linkedin?: string;
+
+  @Column({ nullable: true })
+  github?: string;
+
+  @Column({ nullable: true })
+  portfolio?: string;
+
+  @Column({ type: 'int', nullable: true })
+  yearsOfExperience?: number;
+
+  @Column({ nullable: true })
+  preferredWorkType?: string;
+
+  @Column({ nullable: true })
+  salaryExpectation?: string;
+
+  @Column({ nullable: true })
+  availability?: string;
 
   @OneToMany(() => Job, (job) => job.postedBy, { cascade: true })
   jobs: Job[];
