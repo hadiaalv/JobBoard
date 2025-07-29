@@ -300,7 +300,7 @@ export default function ProfilePage() {
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     console.error('Failed to load avatar:', user.avatar);
-                    console.error('Avatar URL attempted:', getFileUrl(user.avatar));
+                    console.error('Avatar URL attempted:', getAvatarUrl(user.avatar));
                     e.currentTarget.style.display = 'none';
                     // Show fallback initials instead
                     const parent = e.currentTarget.parentElement;
@@ -309,7 +309,7 @@ export default function ProfilePage() {
                     }
                   }}
                   onLoad={() => {
-                    console.log('Avatar loaded successfully:', getFileUrl(user.avatar));
+                    console.log('Avatar loaded successfully:', getAvatarUrl(user.avatar));
                   }}
                 />
               ) : (

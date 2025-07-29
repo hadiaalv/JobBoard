@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuthStore } from "@/stores/auth";
-import { getFileUrl } from "@/lib/utils";
+import { getFileUrl, getAvatarUrl } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
 export default function DebugPage() {
@@ -11,7 +11,7 @@ export default function DebugPage() {
 
   useEffect(() => {
     if (user?.avatar) {
-      const url = getFileUrl(user.avatar);
+      const url = getAvatarUrl(user.avatar);
       setAvatarUrl(url);
       console.log("Debug: Avatar URL generated:", url);
     }
