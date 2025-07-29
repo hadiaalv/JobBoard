@@ -1,15 +1,19 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
-import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import { JobsModule } from './jobs/jobs.module';
 import { ApplicationsModule } from './applications/applications.module';
-import { MailModule } from './mail/mail.module';
-import { UploadModule } from './upload/upload.module';
 import { ContactModule } from './contact/contact.module';
+import { UploadModule } from './upload/upload.module';
+import { MailModule } from './mail/mail.module';
 
 import { User } from './users/entities/user.entity';
 import { Job } from './jobs/entities/job.entity';
@@ -21,49 +25,34 @@ import { Contact } from './contact/entities/contact.entity';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        const databaseUrl = configService.get<string>('DATABASE_URL');
-        const isSqlite = databaseUrl?.startsWith('sqlite://');
-        
-        if (isSqlite) {
-          return {
-            type: 'sqlite' as const,
-            database: databaseUrl?.replace('sqlite://', ''),
-            entities: [User, Job, Application, Contact],
-            synchronize: true, // Only for SQLite development
-            logging: configService.get<string>('NODE_ENV') === 'development',
-          };
-        } else {
-          return {
-            type: 'postgres' as const,
-            url: databaseUrl,
-            entities: [User, Job, Application, Contact],
-            synchronize: true, // Temporarily enable for development
-            logging: configService.get<string>('NODE_ENV') === 'development',
-            ssl: configService.get<string>('NODE_ENV') === 'production'
-              ? { rejectUnauthorized: false }
-              : false,
-          };
-        }
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      entities: [User, Job, Application, Contact],
+      migrations: ['src/migrations/*.ts'],
+      synchronize: false,
+      logging: process.env.NODE_ENV === 'development',
+    }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
       },
-      inject: [ConfigService],
+    ]),
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN || '7d' },
     }),
-
-    ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 10,
-    }),
-
-    AuthModule,
     UsersModule,
+    AuthModule,
     JobsModule,
     ApplicationsModule,
-    MailModule,
-    UploadModule,
     ContactModule,
+    UploadModule,
+    MailModule,
   ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
