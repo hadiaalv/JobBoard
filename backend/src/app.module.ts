@@ -33,12 +33,10 @@ import { Contact } from './contact/entities/contact.entity';
       synchronize: false,
       logging: process.env.NODE_ENV === 'development',
     }),
-    ThrottlerModule.forRoot([
-      {
-        ttl: 60000,
-        limit: 100,
-      },
-    ]),
+    ThrottlerModule.forRoot({
+      ttl: 60,      
+      limit: 100,   
+    }),
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
