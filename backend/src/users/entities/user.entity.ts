@@ -36,7 +36,6 @@ export class User {
 
   @Column({
     type: 'varchar',
-    default: UserRole.JOB_SEEKER,
   })
   role: UserRole;
 
