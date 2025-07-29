@@ -103,7 +103,6 @@ export default function UserProfilePage() {
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4">
-      {/* Back Button */}
       <Button variant="ghost" asChild className="mb-6">
         <Link href="/dashboard">
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -111,11 +110,9 @@ export default function UserProfilePage() {
         </Link>
       </Button>
 
-      {/* Profile Header */}
       <Card className="mb-8">
         <CardContent className="p-8">
           <div className="flex items-start gap-6">
-            {/* Avatar */}
             <div className="w-32 h-32 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center text-4xl font-bold text-primary overflow-hidden">
               {user.avatar ? (
                 <img
@@ -136,7 +133,6 @@ export default function UserProfilePage() {
               )}
             </div>
 
-            {/* User Info */}
             <div className="flex-1">
               <div className="flex items-center justify-between mb-4">
                 <div>
@@ -161,7 +157,6 @@ export default function UserProfilePage() {
                 </Badge>
               </div>
 
-              {/* Contact Actions */}
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" asChild>
                   <a href={`mailto:${user.email}`}>
@@ -183,7 +178,6 @@ export default function UserProfilePage() {
         </CardContent>
       </Card>
 
-      {/* Bio */}
       {user.bio && (
         <Card className="mb-8">
           <CardHeader>
@@ -195,7 +189,6 @@ export default function UserProfilePage() {
         </Card>
       )}
 
-      {/* Skills */}
       {skills.length > 0 && (
         <Card className="mb-8">
           <CardHeader>
@@ -213,9 +206,7 @@ export default function UserProfilePage() {
         </Card>
       )}
 
-      {/* Experience & Education */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Experience */}
         {user.experience && (
           <Card>
             <CardHeader>
@@ -230,7 +221,6 @@ export default function UserProfilePage() {
           </Card>
         )}
 
-        {/* Education */}
         {user.education && (
           <Card>
             <CardHeader>
@@ -246,9 +236,7 @@ export default function UserProfilePage() {
         )}
       </div>
 
-      {/* Additional Information */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Professional Details */}
         <Card>
           <CardHeader>
             <CardTitle>Professional Details</CardTitle>
@@ -296,7 +284,6 @@ export default function UserProfilePage() {
           </CardContent>
         </Card>
 
-        {/* Additional Information */}
         <Card>
           <CardHeader>
             <CardTitle>Additional Information</CardTitle>
@@ -339,7 +326,6 @@ export default function UserProfilePage() {
         </Card>
       </div>
 
-      {/* Social Links */}
       {(user.linkedin || user.github || user.portfolio || user.website) && (
         <Card className="mb-8">
           <CardHeader>

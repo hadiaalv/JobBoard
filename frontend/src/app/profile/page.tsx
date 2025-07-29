@@ -5,19 +5,44 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/auth";
 import { getFileUrl, getDownloadUrl, getAvatarUrl } from "@/lib/utils";
 import PortfolioSection from "@/components/portfolio-section";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { 
+  ArrowLeft, 
+  Mail, 
+  MapPin, 
+  Phone, 
+  Globe, 
+  Linkedin, 
+  Github, 
+  Building,
+  Calendar,
+  Award,
+  BookOpen,
+  Languages,
+  Briefcase,
+  DollarSign,
+  Clock,
+  Edit,
+  Save,
+  X
+} from "lucide-react";
+import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function ProfilePage() {
-  const { user, updateUser, initializeAuth, isAuthenticated } = useAuthStore();
+  const router = useRouter();
+  const { user, isAuthenticated, updateUser, editing, setEditing } = useAuthStore();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     bio: "",
+    company: "",
     location: "",
     phone: "",
     website: "",
-    skills: [] as string[],
-    experience: "",
     education: "",
     interests: "",
     languages: "",
@@ -26,69 +51,30 @@ export default function ProfilePage() {
     linkedin: "",
     github: "",
     portfolio: "",
-    yearsOfExperience: undefined as number | undefined,
-    preferredWorkType: "",
-    salaryExpectation: "",
-    availability: "",
-  });
-  const [editing, setEditing] = useState(false);
-  const [originalForm, setOriginalForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    bio: "",
-    location: "",
-    phone: "",
-    website: "",
-    skills: [] as string[],
-    experience: "",
-    education: "",
-    interests: "",
-    languages: "",
-    certifications: "",
-    projects: "",
-    linkedin: "",
-    github: "",
-    portfolio: "",
-    yearsOfExperience: undefined as number | undefined,
+    yearsOfExperience: "",
     preferredWorkType: "",
     salaryExpectation: "",
     availability: "",
   });
   const [avatar, setAvatar] = useState<File | null>(null);
   const [resume, setResume] = useState<File | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);                                                                                                                                  
-  const [submitting, setSubmitting] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    console.log("Profile page: Initializing auth...");
-    initializeAuth();
-  }, [initializeAuth]);
-
-  useEffect(() => {
-    console.log("Profile page: Auth state changed", { isAuthenticated, user });
-    
     if (!isAuthenticated) {
-      setLoading(false);
-      router.replace("/auth/login");
+      router.push("/auth/login");
       return;
     }
 
     if (user) {
-      console.log("Profile page: Setting form data from user", user);
-      const updated = {
+      setForm({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         email: user.email || "",
         bio: user.bio || "",
+        company: user.company || "",
         location: user.location || "",
         phone: user.phone || "",
         website: user.website || "",
-        skills: user.skills || [],
-        experience: user.experience || "",
         education: user.education || "",
         interests: user.interests || "",
         languages: user.languages || "",
@@ -97,202 +83,118 @@ export default function ProfilePage() {
         linkedin: user.linkedin || "",
         github: user.github || "",
         portfolio: user.portfolio || "",
-        yearsOfExperience: user.yearsOfExperience,
+        yearsOfExperience: user.yearsOfExperience?.toString() || "",
         preferredWorkType: user.preferredWorkType || "",
         salaryExpectation: user.salaryExpectation || "",
         availability: user.availability || "",
-      };
-      setForm(updated);
-      setOriginalForm(updated);
-      setLoading(false);
+      });
     }
   }, [user, isAuthenticated, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    if (!editing) return;
-    
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
-    console.log("Profile page: Form field changed", name, value);
   };
 
   const handleSkillsChange = (skills: string[]) => {
-    if (!editing) return;
-    setForm(prev => ({ ...prev, skills }));
-    console.log("Profile page: Skills changed", skills);
+    setForm(prev => ({ ...prev, skills: skills }));
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!editing) return;
-    
     if (e.target.files && e.target.files[0]) {
       setAvatar(e.target.files[0]);
-      console.log("Profile page: Avatar selected", e.target.files[0].name);
     }
   };
 
   const handleResumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!editing) return;
-    
     if (e.target.files && e.target.files[0]) {
       setResume(e.target.files[0]);
-      console.log("Profile page: Resume selected", e.target.files[0].name);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!editing) {
-      console.log("Profile page: Form submitted but not in edit mode");
-      return;
-    }
-    
-    setError("");
-    setSubmitting(true);
-
-    console.log("Profile page: Submitting form", form);
-    console.log("Profile page: Original form", originalForm);
-
     try {
-      const hasChanges = 
-        form.firstName !== originalForm.firstName ||
-        form.lastName !== originalForm.lastName ||
-        form.bio !== originalForm.bio ||
-        form.location !== originalForm.location ||
-        form.phone !== originalForm.phone ||
-        form.website !== originalForm.website ||
-        JSON.stringify(form.skills) !== JSON.stringify(originalForm.skills) ||
-        form.experience !== originalForm.experience ||
-        form.education !== originalForm.education ||
-        form.interests !== originalForm.interests ||
-        form.languages !== originalForm.languages ||
-        form.certifications !== originalForm.certifications ||
-        form.projects !== originalForm.projects ||
-        form.linkedin !== originalForm.linkedin ||
-        form.github !== originalForm.github ||
-        form.portfolio !== originalForm.portfolio ||
-        form.yearsOfExperience !== originalForm.yearsOfExperience ||
-        form.preferredWorkType !== originalForm.preferredWorkType ||
-        form.salaryExpectation !== originalForm.salaryExpectation ||
-        form.availability !== originalForm.availability ||
-        avatar !== null ||
-        resume !== null;
-
-      console.log("Profile page: Has changes?", hasChanges);
-
-      if (!hasChanges) {
-        console.log("Profile page: No changes detected, exiting edit mode");
-        setEditing(false);
-        setSubmitting(false);
-        return;
-      }
-
-      const updateData = {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        bio: form.bio,
-        location: form.location,
-        phone: form.phone,
-        website: form.website,
-        skills: form.skills,
-        experience: form.experience,
-        education: form.education,
-        interests: form.interests,
-        languages: form.languages,
-        certifications: form.certifications,
-        projects: form.projects,
-        linkedin: form.linkedin,
-        github: form.github,
-        portfolio: form.portfolio,
-        yearsOfExperience: form.yearsOfExperience,
-        preferredWorkType: form.preferredWorkType,
-        salaryExpectation: form.salaryExpectation,
-        availability: form.availability,
-      };
-
-      console.log("Profile page: Calling updateUser with", updateData);
-      const updatedUser = await updateUser(updateData, avatar || undefined, resume || undefined);
-      console.log("Profile page: Update successful", updatedUser);
+      const updateData: any = { ...form };
       
-      setOriginalForm({
-        firstName: form.firstName,
-        lastName: form.lastName,
-        email: form.email,
-        bio: form.bio,
-        location: form.location,
-        phone: form.phone,
-        website: form.website,
-        skills: form.skills,
-        experience: form.experience,
-        education: form.education,
-        interests: form.interests,
-        languages: form.languages,
-        certifications: form.certifications,
-        projects: form.projects,
-        linkedin: form.linkedin,
-        github: form.github,
-        portfolio: form.portfolio,
-        yearsOfExperience: form.yearsOfExperience,
-        preferredWorkType: form.preferredWorkType,
-        salaryExpectation: form.salaryExpectation,
-        availability: form.availability,
-      });
+      if (form.yearsOfExperience) {
+        updateData.yearsOfExperience = parseInt(form.yearsOfExperience);
+      }
+      
+      await updateUser(updateData, avatar || undefined, resume || undefined);
       
       setAvatar(null);
       setResume(null);
-      
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
       setEditing(false);
-    } catch (err: any) {
-      console.error('Profile page: Update error:', err);
-      console.error('Profile page: Error response:', err.response?.data);
-      setError(err.response?.data?.message || "Failed to update profile. Please try again.");
-    } finally {
-      setSubmitting(false);
+      toast.success("Profile updated successfully!");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      toast.error("Failed to update profile");
     }
   };
 
   const handleEditClick = () => {
-    console.log("Profile page: Edit button clicked");
-    setError("");
-    setSuccess(false);
     setEditing(true);
   };
 
   const handleCancelClick = () => {
-    console.log("Profile page: Cancel button clicked");
-    setForm(originalForm);
+    setEditing(false);
     setAvatar(null);
     setResume(null);
-    setEditing(false);
-    setError("");
+    if (user) {
+      setForm({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        bio: user.bio || "",
+        company: user.company || "",
+        location: user.location || "",
+        phone: user.phone || "",
+        website: user.website || "",
+        education: user.education || "",
+        interests: user.interests || "",
+        languages: user.languages || "",
+        certifications: user.certifications || "",
+        projects: user.projects || "",
+        linkedin: user.linkedin || "",
+        github: user.github || "",
+        portfolio: user.portfolio || "",
+        yearsOfExperience: user.yearsOfExperience?.toString() || "",
+        preferredWorkType: user.preferredWorkType || "",
+        salaryExpectation: user.salaryExpectation || "",
+        availability: user.availability || "",
+      });
+    }
   };
 
-  if (loading) {
-    return <div className="text-center py-10">Loading profile...</div>;
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  if (!user) {
+    return (
+      <div className="max-w-4xl mx-auto py-12 px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading profile...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold mb-8">Profile</h1>
-      <div className="bg-white p-8 rounded shadow space-y-8">
-        {success && (
-          <div className="bg-green-100 text-green-800 p-4 rounded text-center font-semibold mb-4">
-            Profile updated successfully!
-          </div>
-        )}
-        {error && (
-          <div className="bg-red-100 text-red-800 p-4 rounded text-center font-semibold mb-4">
-            {error}
-          </div>
-        )}
+      <Button variant="ghost" asChild className="mb-6">
+        <Link href="/dashboard">
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Dashboard
+        </Link>
+      </Button>
 
-        {/* Basic Information Section */}
-        <div className="flex flex-col md:flex-row gap-8 items-start">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-24 h-24 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center text-3xl font-bold text-primary overflow-hidden">
+      <Card className="mb-8">
+        <CardContent className="p-8">
+          <div className="flex items-start gap-6">
+            <div className="w-32 h-32 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center text-4xl font-bold text-primary overflow-hidden">
               {user?.avatar ? (
                 <img
                   src={getAvatarUrl(user.avatar)}
@@ -302,7 +204,6 @@ export default function ProfilePage() {
                     console.error('Failed to load avatar:', user.avatar);
                     console.error('Avatar URL attempted:', getAvatarUrl(user.avatar));
                     e.currentTarget.style.display = 'none';
-                    // Show fallback initials instead
                     const parent = e.currentTarget.parentElement;
                     if (parent) {
                       parent.innerHTML = `${form.firstName.charAt(0)}${form.lastName.charAt(0)}`;
@@ -398,7 +299,7 @@ export default function ProfilePage() {
                     rel="noopener noreferrer"
                     className="text-primary hover:underline text-sm"
                   >
-                    View Current Resume
+                    View current resume
                   </a>
                 </div>
               )}
@@ -407,57 +308,43 @@ export default function ProfilePage() {
                   type="file"
                   accept=".pdf,.doc,.docx"
                   onChange={handleResumeChange}
-                  className="mt-1 block w-full text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
+                  className="mt-2 block w-full text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
                 />
               )}
               {resume && (
-                <p className="text-xs text-green-600 mt-1">✓ {resume.name}</p>
+                <p className="text-xs text-green-600">✓ {resume.name}</p>
               )}
             </div>
           </div>
-        </div>
 
-        {/* Portfolio Section - Only show for job seekers */}
-        {user?.role === 'job_seeker' && (
-          <PortfolioSection
-            form={form}
-            editing={editing}
-            onChange={handleChange}
-            onSkillsChange={handleSkillsChange}
-          />
-        )}
+          <div className="flex justify-end gap-2 mt-6">
+            {!editing ? (
+              <Button onClick={handleEditClick} className="flex items-center gap-2">
+                <Edit className="h-4 w-4" />
+                Edit Profile
+              </Button>
+            ) : (
+              <>
+                <Button variant="outline" onClick={handleCancelClick} className="flex items-center gap-2">
+                  <X className="h-4 w-4" />
+                  Cancel
+                </Button>
+                <Button onClick={handleSubmit} className="flex items-center gap-2">
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </Button>
+              </>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-        <div className="flex justify-end gap-4">
-          {!editing ? (
-            <button
-              type="button"
-              onClick={handleEditClick}
-              className="bg-primary text-white px-6 py-2 rounded font-bold hover:bg-primary/90 transition-colors"
-            >
-              Edit Profile
-            </button>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={submitting}
-                className="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {submitting ? "Saving..." : "Save Changes"}
-              </button>
-              <button
-                type="button"
-                onClick={handleCancelClick}
-                disabled={submitting}
-                className="bg-gray-400 text-white px-6 py-2 rounded font-bold hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Cancel
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+      <PortfolioSection 
+        form={form} 
+        onChange={handleChange} 
+        onSkillsChange={handleSkillsChange}
+        editing={editing}
+      />
     </div>
   );
 }

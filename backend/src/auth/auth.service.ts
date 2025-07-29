@@ -48,34 +48,12 @@ export class AuthService {
 
   async register(registerDto: RegisterDto) {
     try {
-      console.log('AuthService: Registration data received:', {
-        ...registerDto,
-        password: '[HIDDEN]'
-      });
-      console.log('AuthService: Role from registration:', registerDto.role);
-      
       const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-      const userData = {
+      const user = await this.usersService.create({
         ...registerDto,
         password: hashedPassword,
-      };
-      
-      console.log('AuthService: User data to be created:', {
-        ...userData,
-        password: '[HIDDEN]'
       });
       
-      const user = await this.usersService.create(userData);
-      
-      console.log('AuthService: User created successfully:', {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role
-      });
-      
-      // Send email notification (non-blocking)
       this.mailService.sendRegistrationEmail(user.email, user.firstName)
         .catch(error => {
           console.log('Email sending failed (non-critical):', error.message);
@@ -83,7 +61,6 @@ export class AuthService {
       
       return this.login(user);
     } catch (error) {
-      console.error('AuthService: Registration error:', error);
       if (error.code === '23505' && error.constraint?.includes('email')) {
         throw new ConflictException('Email already exists. Please use a different email address.');
       }

@@ -17,17 +17,13 @@ export class UploadService {
     const extension = originalName.includes('.') ? originalName.split('.').pop() : '';
     const baseName = originalName.includes('.') ? originalName.substring(0, originalName.lastIndexOf('.')) : originalName;
     
-    
     const cleanBaseName = baseName.replace(/[^a-zA-Z0-9]/g, '_');
     const fileName = `${timestamp}-${cleanBaseName}${extension ? '.' + extension : ''}`;
     
     const filePath = join(uploadDir, fileName);
     
-   
     if (file.buffer) {
       await writeFile(filePath, file.buffer);
-    } else {
-     
     }
     
     return fileName;

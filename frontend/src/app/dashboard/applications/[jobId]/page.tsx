@@ -76,7 +76,7 @@ export default function JobApplicationsPage() {
         notes,
       });
       toast.success("Application status updated");
-      fetchJobAndApplications(); // Refresh the data
+      fetchJobAndApplications();
     } catch (error) {
       console.error("Failed to update status:", error);
       toast.error("Failed to update application status");
@@ -179,7 +179,6 @@ export default function JobApplicationsPage() {
 
   return (
     <div className="max-w-6xl mx-auto py-12 px-4">
-      {/* Back Button */}
       <Button variant="ghost" asChild className="mb-6">
         <Link href="/dashboard">
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -187,7 +186,6 @@ export default function JobApplicationsPage() {
         </Link>
       </Button>
 
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Applications for {job.title}</h1>
         <p className="text-gray-600">
@@ -195,7 +193,6 @@ export default function JobApplicationsPage() {
         </p>
       </div>
 
-      {/* Job Info */}
       <Card className="mb-8">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
@@ -220,7 +217,6 @@ export default function JobApplicationsPage() {
         </CardContent>
       </Card>
 
-      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -269,7 +265,6 @@ export default function JobApplicationsPage() {
         </Card>
       </div>
 
-      {/* Filter */}
       <div className="mb-6">
         <div className="flex flex-wrap gap-2">
           <Button
@@ -310,7 +305,6 @@ export default function JobApplicationsPage() {
         </div>
       </div>
 
-      {/* Applications List */}
       {filteredApplications.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">
@@ -384,35 +378,23 @@ export default function JobApplicationsPage() {
                         variant="outline" 
                         size="sm"
                         onClick={() => {
-                          console.log('Application resumeUrl:', application.resumeUrl);
-                          console.log('Application resumeUrl type:', typeof application.resumeUrl);
-                          console.log('Application resumeUrl length:', application.resumeUrl?.length);
-                          
-                          // Type guard to ensure resumeUrl is defined
                           if (!application.resumeUrl) {
                             toast.error('Resume file not available');
                             return;
                           }
                           
                           const url = getDownloadUrl(application.resumeUrl);
-                          console.log('Download clicked:', {
-                            originalUrl: application.resumeUrl,
-                            generatedUrl: url
-                          });
                           
                           if (!url) {
                             toast.error('Resume file not available');
                             return;
                           }
                           
-                          // Test if the file exists
                           fetch(url, { method: 'HEAD' })
                             .then(response => {
-                              console.log('File check response:', response.status, response.statusText);
                               if (response.ok) {
                                 window.open(url, '_blank');
                               } else {
-                                console.error('File not found:', url, 'Status:', response.status);
                                 toast.error(`Resume file not found (${response.status})`);
                               }
                             })
@@ -443,7 +425,6 @@ export default function JobApplicationsPage() {
                   </div>
                 </div>
 
-                {/* Status Update Actions */}
                 <div className="mt-6 pt-4 border-t">
                   <h4 className="font-medium text-gray-900 mb-3">Update Status</h4>
                   <div className="flex flex-wrap gap-2">

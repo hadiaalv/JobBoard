@@ -38,7 +38,6 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      // If the query fails due to missing columns, try with basic fields only
       console.warn('Failed to fetch user with extended fields, trying basic fields:', error.message);
       
       const user = await this.userRepository.findOne({
@@ -58,7 +57,6 @@ export class UsersService {
     try {
       const user = await this.findOne(id);
       
-      // Update all fields explicitly
       if (updateUserDto.firstName !== undefined) user.firstName = updateUserDto.firstName;
       if (updateUserDto.lastName !== undefined) user.lastName = updateUserDto.lastName;
       if (updateUserDto.bio !== undefined) user.bio = updateUserDto.bio;
@@ -80,30 +78,7 @@ export class UsersService {
       if (updateUserDto.salaryExpectation !== undefined) user.salaryExpectation = updateUserDto.salaryExpectation;
       if (updateUserDto.availability !== undefined) user.availability = updateUserDto.availability;
       
-      console.log('UsersService: Update data applied to user:', {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        bio: user.bio,
-        skills: user.skills,
-        location: user.location,
-        phone: user.phone,
-        website: user.website,
-        education: user.education,
-        interests: user.interests,
-        languages: user.languages,
-        certifications: user.certifications,
-        projects: user.projects,
-        linkedin: user.linkedin,
-        github: user.github,
-        portfolio: user.portfolio,
-        yearsOfExperience: user.yearsOfExperience,
-        preferredWorkType: user.preferredWorkType,
-        salaryExpectation: user.salaryExpectation,
-        availability: user.availability,
-      });
-      
       const result = await this.userRepository.save(user);
-      console.log('UsersService: Update successful:', result);
       return result;
     } catch (error) {
       console.error('UsersService: update error:', error);
@@ -125,7 +100,6 @@ export class UsersService {
         user.resume = resumeUrl;
       }
       
-      // Update all fields explicitly
       if (updateUserDto.firstName !== undefined) user.firstName = updateUserDto.firstName;
       if (updateUserDto.lastName !== undefined) user.lastName = updateUserDto.lastName;
       if (updateUserDto.bio !== undefined) user.bio = updateUserDto.bio;
@@ -147,30 +121,7 @@ export class UsersService {
       if (updateUserDto.salaryExpectation !== undefined) user.salaryExpectation = updateUserDto.salaryExpectation;
       if (updateUserDto.availability !== undefined) user.availability = updateUserDto.availability;
       
-      console.log('UsersService: Update data applied to user:', {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        bio: user.bio,
-        skills: user.skills,
-        location: user.location,
-        phone: user.phone,
-        website: user.website,
-        education: user.education,
-        interests: user.interests,
-        languages: user.languages,
-        certifications: user.certifications,
-        projects: user.projects,
-        linkedin: user.linkedin,
-        github: user.github,
-        portfolio: user.portfolio,
-        yearsOfExperience: user.yearsOfExperience,
-        preferredWorkType: user.preferredWorkType,
-        salaryExpectation: user.salaryExpectation,
-        availability: user.availability,
-      });
-      
       const result = await this.userRepository.save(user);
-      console.log('UsersService: Update successful:', result);
       return result;
     } catch (error) {
       console.error('UsersService: updateWithFiles error:', error);
@@ -187,22 +138,8 @@ export class UsersService {
   }
 
   async create(userData: Partial<User>) {
-    console.log('UsersService: Creating user with data:', { 
-      ...userData, 
-      password: '[HIDDEN]' 
-    });
-    console.log('UsersService: Role in userData:', userData.role);
-    
     const user = this.userRepository.create(userData);
-    console.log('UsersService: User entity created:', { 
-      id: user.id, 
-      email: user.email,
-      role: user.role 
-    });
-    
     const savedUser = await this.userRepository.save(user);
-    console.log('UsersService: User saved to database with ID:', savedUser.id);
-    console.log('UsersService: Final user role in database:', savedUser.role);
     return savedUser;
   }
 }

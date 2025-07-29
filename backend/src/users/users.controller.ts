@@ -48,21 +48,12 @@ export class UsersController {
     @UploadedFiles() files: { avatar?: Express.Multer.File[], resume?: Express.Multer.File[] }
   ) {
     try {
-      console.log('UsersController: updateMe called with data:', JSON.stringify(updateUserDto, null, 2));
-      console.log('UsersController: files:', files);
-      console.log('UsersController: user ID:', req.user.id);
-      
       const avatar = files?.avatar?.[0];
       const resume = files?.resume?.[0];
       
       const result = await this.usersService.updateWithFiles(req.user.id, updateUserDto, avatar, resume);
-      console.log('UsersController: update successful:', result);
       return result;
     } catch (error) {
-      console.error('UsersController: updateMe error:', error);
-      console.error('UsersController: error message:', error.message);
-      console.error('UsersController: error stack:', error.stack);
-      
       if (error instanceof BadRequestException) {
         throw error;
       }
@@ -90,30 +81,24 @@ export class UsersController {
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string, @Request() req) {
-    // Allow users to view their own profile
     if (req.user.id === id) {
       return this.usersService.findOne(id);
     }
     
-    // Get the target user
     const targetUser = await this.usersService.findOne(id);
     
-    // Allow employers to view job seeker profiles
     if (req.user.role === 'employer' && targetUser.role === 'job_seeker') {
       return targetUser;
     }
     
-    // Allow job seekers to view employer profiles
     if (req.user.role === 'job_seeker' && targetUser.role === 'employer') {
       return targetUser;
     }
     
-    // Allow admins to view any profile
     if (req.user.role === 'admin') {
       return targetUser;
     }
     
-    // For all other cases, return a sanitized version (no sensitive data)
     const { password, ...sanitizedUser } = targetUser;
     return sanitizedUser;
   }

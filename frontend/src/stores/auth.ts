@@ -61,38 +61,26 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       updateUser: async (data: Partial<User>, avatar?: File, resume?: File) => {
-        console.log('Auth store: updateUser called with', data, 'avatar:', avatar?.name, 'resume:', resume?.name);
         try {
           const formData = new FormData();
           
           Object.keys(data).forEach(key => {
             if (data[key] !== undefined && data[key] !== null) {
-              // Handle skills specifically - convert array to comma-separated string
               if (key === 'skills' && Array.isArray(data[key])) {
                 const skillsString = data[key].join(',');
-                console.log(`Auth store: Adding skills as string:`, skillsString);
                 formData.append(key, skillsString);
               } else {
-                console.log(`Auth store: Adding field ${key}:`, data[key]);
                 formData.append(key, data[key]);
               }
             }
           });
           
           if (avatar) {
-            console.log('Auth store: Adding avatar file:', avatar.name);
             formData.append('avatar', avatar);
           }
           
           if (resume) {
-            console.log('Auth store: Adding resume file:', resume.name);
             formData.append('resume', resume);
-          }
-          
-          // Log all FormData entries
-          console.log('Auth store: FormData entries:');
-          for (let [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
           }
           
           const response = await api.patch<User>('/users/me', formData, {
@@ -100,22 +88,16 @@ export const useAuthStore = create<AuthStore>()(
               'Content-Type': 'multipart/form-data',
             },
           });
-          console.log('Auth store: API response', response.data);
-          const updatedUser = response.data;
-          set({ user: updatedUser });
-          console.log('Auth store: User state updated', updatedUser);
-          return updatedUser;
+          
+          set({ user: response.data });
         } catch (error) {
-          console.error('Auth store: Update user error:', error);
-          console.error('Auth store: Error response:', error.response?.data);
-          console.error('Auth store: Error status:', error.response?.status);
+          console.error('Failed to update user:', error);
           throw error;
         }
       },
 
       initializeAuth: () => {
         const token = Cookies.get('auth-token');
-        console.log('Initializing auth, token:', token);
         if (token) {
           api.get<User>('/users/me')
             .then(response => {
@@ -125,18 +107,12 @@ export const useAuthStore = create<AuthStore>()(
               Cookies.remove('auth-token');
               set({ user: null, isAuthenticated: false });
             });
-        } else {
-          set({ user: null, isAuthenticated: false });
         }
       },
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ 
-        user: state.user, 
-        isAuthenticated: state.isAuthenticated,
-        editing: state.editing
-      }),
+      partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
     }
   )
 );
