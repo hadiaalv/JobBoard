@@ -288,33 +288,35 @@ export default function ProfilePage() {
               />
             </div>
 
-            <div>
-              <label className="block text-gray-700 mb-1">Resume</label>
-              {user?.resume && !resume && (
-                <div className="mb-2 p-2 bg-gray-50 rounded border">
-                  <p className="text-sm text-gray-600">Current resume:</p>
-                  <a 
-                    href={getDownloadUrl(user.resume)}
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-primary hover:underline text-sm"
-                  >
-                    View current resume
-                  </a>
-                </div>
-              )}
-              {editing && (
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={handleResumeChange}
-                  className="mt-2 block w-full text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
-                />
-              )}
-              {resume && (
-                <p className="text-xs text-green-600">✓ {resume.name}</p>
-              )}
-            </div>
+            {user.role === 'job_seeker' && (
+              <div>
+                <label className="block text-gray-700 mb-1">Resume</label>
+                {user?.resume && !resume && (
+                  <div className="mb-2 p-2 bg-gray-50 rounded border">
+                    <p className="text-sm text-gray-600">Current resume:</p>
+                    <a 
+                      href={getDownloadUrl(user.resume)}
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline text-sm"
+                    >
+                      View current resume
+                    </a>
+                  </div>
+                )}
+                {editing && (
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleResumeChange}
+                    className="mt-2 block w-full text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
+                  />
+                )}
+                {resume && (
+                  <p className="text-xs text-green-600">✓ {resume.name}</p>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-2 mt-6">
@@ -339,12 +341,14 @@ export default function ProfilePage() {
         </CardContent>
       </Card>
 
-      <PortfolioSection 
-        form={form} 
-        onChange={handleChange} 
-        onSkillsChange={handleSkillsChange}
-        editing={editing}
-      />
+      {user.role === 'job_seeker' && (
+        <PortfolioSection 
+          form={form} 
+          onChange={handleChange} 
+          onSkillsChange={handleSkillsChange}
+          editing={editing}
+        />
+      )}
     </div>
   );
 }
