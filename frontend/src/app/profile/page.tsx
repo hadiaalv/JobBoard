@@ -432,9 +432,6 @@ export default function ProfilePage() {
                   <p className="text-red-800 font-medium">
                     Are you absolutely sure? This action cannot be undone.
                   </p>
-                  <p className="text-red-700 text-sm">
-                    Please type <span className="font-mono font-bold">DELETE</span> to confirm.
-                  </p>
                   <div className="flex gap-2">
                     <Button 
                       variant="destructive" 

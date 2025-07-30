@@ -131,7 +131,25 @@ export class UsersService {
 
   async remove(id: string) {
     try {
-      const user = await this.findOne(id);
+      const user = await this.userRepository.findOne({
+        where: { id },
+        relations: ['jobsPosted', 'applications']
+      });
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      // Delete related data first
+      if (user.jobsPosted && user.jobsPosted.length > 0) {
+        await this.userRepository.manager.remove(user.jobsPosted);
+      }
+
+      if (user.applications && user.applications.length > 0) {
+        await this.userRepository.manager.remove(user.applications);
+      }
+
+      // Now delete the user
       await this.userRepository.remove(user);
       return { message: 'User deleted successfully' };
     } catch (error) {
