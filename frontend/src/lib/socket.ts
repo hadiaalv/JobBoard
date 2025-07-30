@@ -17,22 +17,17 @@ class SocketService {
   connect(token?: string) {
     // Only run on client side
     if (typeof window === 'undefined') {
-      console.warn('Socket service can only be used on client side');
       return null;
     }
 
     if (this.socket?.connected || this.isConnecting) {
-      console.log('Socket already connected or connecting, returning existing socket');
       return this.socket;
     }
 
     this.isConnecting = true;
     const authToken = token || getCookie('auth-token');
-    
-    console.log('Auth token for socket:', authToken ? 'Found' : 'Not found');
 
     if (!authToken) {
-      console.warn('No auth token available for socket connection');
       this.isConnecting = false;
       return null;
     }
@@ -46,9 +41,6 @@ class SocketService {
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/api';
       const socketUrl = apiUrl.replace('/api', '');
-      console.log('API URL:', apiUrl);
-      console.log('Connecting to socket server:', socketUrl);
-      console.log('Using auth token:', authToken ? 'Present' : 'Missing');
 
       this.socket = io(socketUrl, {
         auth: {
@@ -57,6 +49,10 @@ class SocketService {
         transports: ['websocket', 'polling'],
         timeout: 20000,
         forceNew: true,
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
       });
     } catch (error) {
       console.error('Error creating socket connection:', error);
@@ -66,24 +62,19 @@ class SocketService {
 
     if (this.socket) {
       this.socket.on('connect', () => {
-        console.log('Socket connected successfully with ID:', this.socket?.id);
-        console.log('Socket auth data:', this.socket?.auth);
         this.isConnecting = false;
       });
 
       this.socket.on('disconnect', (reason) => {
-        console.log('Socket disconnected:', reason);
         this.isConnecting = false;
       });
 
       this.socket.on('connect_error', (error) => {
         console.error('Socket connection error:', error);
-        console.error('Error details:', error.message, error.description);
         this.isConnecting = false;
         // Retry connection after a delay
         setTimeout(() => {
           if (!this.socket?.connected) {
-            console.log('Retrying socket connection...');
             this.connect(token);
           }
         }, 5000);
@@ -95,11 +86,28 @@ class SocketService {
 
       // Add authentication success/failure listeners
       this.socket.on('authenticated', () => {
-        console.log('Socket authentication successful');
+        // Authentication successful
       });
 
       this.socket.on('unauthorized', (error) => {
         console.error('Socket authentication failed:', error);
+      });
+
+      // Add reconnection listeners
+      this.socket.on('reconnect', (attemptNumber) => {
+        // Reconnected successfully
+      });
+
+      this.socket.on('reconnect_attempt', (attemptNumber) => {
+        // Reconnection attempt
+      });
+
+      this.socket.on('reconnect_error', (error) => {
+        console.error('Socket reconnection error:', error);
+      });
+
+      this.socket.on('reconnect_failed', () => {
+        console.error('Socket reconnection failed after all attempts');
       });
     }
 

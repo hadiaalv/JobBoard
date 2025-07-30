@@ -7,12 +7,14 @@ import { Job } from '../jobs/entities/job.entity';
 import { MailModule } from '../mail/mail.module';
 import { UploadModule } from '../upload/upload.module';
 import { NotificationsGateway } from '../notifications/notifications.gateway';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Application, Job]),
     MailModule,
     UploadModule,
+    JwtModule,
   ],
   controllers: [ApplicationsController],
   providers: [ApplicationsService, NotificationsGateway],

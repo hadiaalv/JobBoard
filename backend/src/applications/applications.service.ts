@@ -97,7 +97,6 @@ export class ApplicationsService {
           jobId: job.id,
           createdAt: savedApplication.createdAt,
         });
-        console.log(`Real-time notification sent to employer ${job.postedBy.id} for new application`);
       } catch (error) {
         console.error('Failed to send real-time notification to employer:', error);
       }
@@ -183,7 +182,6 @@ export class ApplicationsService {
         notes: updateStatusDto.notes,
         updatedAt: savedApplication.updatedAt,
       });
-      console.log(`Real-time notification sent to applicant ${application.applicant.id} for status update`);
     } catch (error) {
       console.error('Failed to send real-time notification to applicant:', error);
     }
