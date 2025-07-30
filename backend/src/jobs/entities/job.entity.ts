@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Application } from '../../applications/entities/application.entity';
+import { JobFavorite } from '../../job-favorites/entities/job-favorite.entity';
 
 @Entity('jobs')
 export class Job {
@@ -64,6 +65,9 @@ export class Job {
 
   @OneToMany(() => Application, (application) => application.job)
   applications: Application[];
+
+  @OneToMany(() => JobFavorite, (favorite) => favorite.job)
+  jobFavorites: JobFavorite[];
 
   @CreateDateColumn()
   createdAt: Date;

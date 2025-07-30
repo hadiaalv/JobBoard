@@ -9,6 +9,7 @@ import {
 import { Exclude } from 'class-transformer';
 import { Job } from '../../jobs/entities/job.entity';
 import { Application } from '../../applications/entities/application.entity';
+import { JobFavorite } from '../../job-favorites/entities/job-favorite.entity';
 
 export enum UserRole {
   JOB_SEEKER = 'job_seeker',
@@ -35,7 +36,9 @@ export class User {
   lastName: string;
 
   @Column({
-    type: 'varchar',
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.JOB_SEEKER,
   })
   role: UserRole;
 
@@ -48,7 +51,7 @@ export class User {
   @Column({ type: 'text', nullable: true })
   skills?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   experience?: string;
 
   @Column({ nullable: true })
@@ -66,19 +69,19 @@ export class User {
   @Column({ nullable: true })
   website?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   education?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   interests?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   languages?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   certifications?: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   projects?: string;
 
   @Column({ nullable: true })
@@ -102,11 +105,14 @@ export class User {
   @Column({ nullable: true })
   availability?: string;
 
-  @OneToMany(() => Job, (job) => job.postedBy, { cascade: true })
+  @OneToMany(() => Job, (job) => job.postedBy)
   jobsPosted: Job[];
 
-  @OneToMany(() => Application, (application) => application.applicant, { cascade: true })
+  @OneToMany(() => Application, (application) => application.applicant)
   applications: Application[];
+
+  @OneToMany(() => JobFavorite, (favorite) => favorite.user)
+  jobFavorites: JobFavorite[];
 
   @CreateDateColumn()
   createdAt: Date;

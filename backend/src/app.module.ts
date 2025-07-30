@@ -13,10 +13,13 @@ import { ApplicationsModule } from './applications/applications.module';
 import { ContactModule } from './contact/contact.module';
 import { UploadModule } from './upload/upload.module';
 import { MailModule } from './mail/mail.module';
+import { JobFavoritesModule } from './job-favorites/job-favorites.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { User } from './users/entities/user.entity';
 import { Job } from './jobs/entities/job.entity';
 import { Application } from './applications/entities/application.entity';
 import { Contact } from './contact/entities/contact.entity';
+import { JobFavorite } from './job-favorites/entities/job-favorite.entity';
 
 @Module({
   imports: [
@@ -26,7 +29,7 @@ import { Contact } from './contact/entities/contact.entity';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/jobboard',
-      entities: [User, Job, Application, Contact],
+      entities: [User, Job, Application, Contact, JobFavorite],
       synchronize: false, // Disable for now to avoid migration issues
       logging: process.env.NODE_ENV === 'development',
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
@@ -47,6 +50,8 @@ import { Contact } from './contact/entities/contact.entity';
     ContactModule,
     UploadModule,
     MailModule,
+    JobFavoritesModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

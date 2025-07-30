@@ -9,6 +9,7 @@ import { Job } from "@/types";
 import { MapPin, DollarSign, Building, Calendar, Clock, User, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import FavoriteButton from "@/components/favorite-button";
 export default function JobDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -123,9 +124,12 @@ export default function JobDetailPage() {
               )}
             </div>
             <div className="text-right">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-blue-700 shadow-sm mb-2">
-                {job.type?.replace('_', ' ')}
-              </span>
+              <div className="flex items-center justify-end gap-2 mb-2">
+                <FavoriteButton jobId={job.id} size="default" />
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-200 dark:from-blue-900/40 dark:to-blue-800/40 text-blue-800 dark:text-blue-200 border border-blue-300 dark:border-blue-700 shadow-sm">
+                  {job.type?.replace('_', ' ')}
+                </span>
+              </div>
               <div className="text-sm text-gray-500 dark:text-gray-400">
                 Posted {new Date(job.createdAt).toLocaleDateString()}
               </div>

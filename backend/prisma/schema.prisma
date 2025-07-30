@@ -41,6 +41,7 @@ model User {
   // Relations
   jobsPosted        Job[]
   applications      Application[]
+  jobFavorites      JobFavorite[]
 
   @@map("users")
 }
@@ -58,6 +59,7 @@ model Job {
   employerId  String
   employer    User         @relation(fields: [employerId], references: [id], onDelete: Cascade)
   applications Application[]
+  jobFavorites JobFavorite[]
 
   @@map("jobs")
 }
@@ -91,6 +93,21 @@ model Contact {
   updatedAt DateTime @updatedAt
 
   @@map("contact")
+}
+
+model JobFavorite {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, jobId])
+  @@map("job_favorites")
 }
 
 enum UserRole {

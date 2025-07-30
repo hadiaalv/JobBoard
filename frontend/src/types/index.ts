@@ -78,6 +78,11 @@ export interface JobFilters {
   salaryMax?: number;
   skills?: string[];
   search?: string;
+  company?: string;
+  remote?: boolean;
+  urgent?: boolean;
+  sortBy?: 'createdAt' | 'title' | 'company' | 'salaryMin' | 'salaryMax';
+  sortOrder?: 'ASC' | 'DESC';
   page?: number;
   limit?: number;
 }

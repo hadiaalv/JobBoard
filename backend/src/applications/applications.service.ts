@@ -13,6 +13,7 @@ import { User } from '../users/entities/user.entity';
 import { Job } from '../jobs/entities/job.entity';
 import { MailService } from '../mail/mail.service';
 import { UploadService } from '../upload/upload.service';
+import { NotificationsGateway } from '../notifications/notifications.gateway';
 
 @Injectable()
 export class ApplicationsService {
@@ -23,6 +24,7 @@ export class ApplicationsService {
     private readonly jobRepository: Repository<Job>,
     private readonly mailService: MailService,
     private readonly uploadService: UploadService,
+    private readonly notificationsGateway: NotificationsGateway,
   ) {}
 
   async create(
@@ -43,6 +45,7 @@ export class ApplicationsService {
 
     const job = await this.jobRepository.findOne({
       where: { id: createApplicationDto.jobId },
+      relations: ['postedBy'],
     });
 
     if (!job) {
@@ -81,6 +84,23 @@ export class ApplicationsService {
       }
     } catch (error) {
       console.error('Failed to send email notifications:', error);
+    }
+
+    // Send real-time notification to employer
+    if (job.postedBy) {
+      try {
+        this.notificationsGateway.sendNewApplication(job.postedBy.id, {
+          id: savedApplication.id,
+          jobTitle: job.title,
+          applicantName: `${user.firstName} ${user.lastName}`,
+          applicantId: user.id,
+          jobId: job.id,
+          createdAt: savedApplication.createdAt,
+        });
+        console.log(`Real-time notification sent to employer ${job.postedBy.id} for new application`);
+      } catch (error) {
+        console.error('Failed to send real-time notification to employer:', error);
+      }
     }
 
     return savedApplication;
@@ -125,7 +145,7 @@ export class ApplicationsService {
   ): Promise<Application> {
     const application = await this.applicationRepository.findOne({
       where: { id },
-      relations: ['job', 'job.postedBy'],
+      relations: ['job', 'job.postedBy', 'applicant'],
     });
 
     if (!application) {
@@ -151,6 +171,21 @@ export class ApplicationsService {
       );
     } catch (error) {
       console.error('Failed to send status update email:', error);
+    }
+
+    // Send real-time notification to applicant
+    try {
+      this.notificationsGateway.sendApplicationUpdate(application.applicant.id, {
+        id: savedApplication.id,
+        jobTitle: application.job.title,
+        company: application.job.company,
+        status: updateStatusDto.status,
+        notes: updateStatusDto.notes,
+        updatedAt: savedApplication.updatedAt,
+      });
+      console.log(`Real-time notification sent to applicant ${application.applicant.id} for status update`);
+    } catch (error) {
+      console.error('Failed to send real-time notification to applicant:', error);
     }
 
     return savedApplication;

@@ -17,6 +17,7 @@ import {
   Moon,
   Sun
 } from 'lucide-react'
+import RealTimeNotifications from './real-time-notifications'
 import { useState, useEffect } from 'react'
 
 function useThemeFallback() {
@@ -127,6 +128,7 @@ export function Navigation() {
             
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
+                <RealTimeNotifications />
                 <div className="text-sm text-gray-700 dark:text-gray-200 font-medium bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 px-3 py-1 rounded-full">
                   Welcome, {user?.firstName}!
                 </div>

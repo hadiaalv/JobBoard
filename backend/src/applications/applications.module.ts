@@ -6,6 +6,7 @@ import { Application } from './entities/application.entity';
 import { Job } from '../jobs/entities/job.entity';
 import { MailModule } from '../mail/mail.module';
 import { UploadModule } from '../upload/upload.module';
+import { NotificationsGateway } from '../notifications/notifications.gateway';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { UploadModule } from '../upload/upload.module';
     UploadModule,
   ],
   controllers: [ApplicationsController],
-  providers: [ApplicationsService],
+  providers: [ApplicationsService, NotificationsGateway],
   exports: [ApplicationsService],
 })
 export class ApplicationsModule {}

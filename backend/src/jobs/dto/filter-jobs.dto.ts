@@ -1,21 +1,5 @@
-import { IsOptional, IsString, IsEnum, IsNumber, IsArray, Min } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
-
-export enum JobType {
-  FULL_TIME = 'full_time',
-  PART_TIME = 'part_time',
-  CONTRACT = 'contract',
-  INTERNSHIP = 'internship',
-  FREELANCE = 'freelance',
-}
-
-export enum ExperienceLevel {
-  ENTRY = 'entry',
-  MID = 'mid',
-  SENIOR = 'senior',
-  LEAD = 'lead',
-  EXECUTIVE = 'executive',
-}
+import { IsOptional, IsString, IsNumber, IsArray, IsEnum, Min, Max } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class FilterJobsDto {
   @IsOptional()
@@ -27,26 +11,66 @@ export class FilterJobsDto {
   location?: string;
 
   @IsOptional()
-  @IsEnum(JobType)
-  type?: JobType;
+  @IsString()
+  company?: string;
 
   @IsOptional()
-  @IsEnum(ExperienceLevel)
-  experienceLevel?: ExperienceLevel;
+  @IsEnum(['full_time', 'part_time', 'contract', 'internship', 'freelance'])
+  type?: string;
 
   @IsOptional()
-  @Type(() => Number)
+  @IsEnum(['entry', 'mid', 'senior', 'lead', 'executive'])
+  experienceLevel?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => parseInt(value))
   @IsNumber()
   @Min(0)
   salaryMin?: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(({ value }) => parseInt(value))
   @IsNumber()
   @Min(0)
   salaryMax?: number;
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value.split(',').map(s => s.trim());
+    }
+    return value;
+  })
+  skills?: string[];
+
+  @IsOptional()
   @IsString()
-  company?: string;
+  sortBy?: 'createdAt' | 'title' | 'company' | 'salaryMin' | 'salaryMax';
+
+  @IsOptional()
+  @IsEnum(['ASC', 'DESC'])
+  sortOrder?: 'ASC' | 'DESC';
+
+  @IsOptional()
+  @Transform(({ value }) => parseInt(value))
+  @IsNumber()
+  @Min(1)
+  page?: number = 1;
+
+  @IsOptional()
+  @Transform(({ value }) => parseInt(value))
+  @IsNumber()
+  @Min(1)
+  @Max(50)
+  limit?: number = 10;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  remote?: boolean;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  urgent?: boolean;
 }
