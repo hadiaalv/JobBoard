@@ -4,7 +4,7 @@ import { useState } from "react";
 
 interface PortfolioSectionProps {
   form: {
-    skills?: string[];
+    skills?: string | string[];
     experience?: string;
     education?: string;
     interests?: string;

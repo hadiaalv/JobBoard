@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -8,78 +7,102 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model applications {
-  id             String                   @id(map: "PK_938c0a27255637bde919591888f") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  coverLetter    String?
-  resumeFilename String?                  @db.VarChar
-  resumeUrl      String?                  @db.VarChar
-  status         applications_status_enum @default(pending)
-  notes          String?
-  createdAt      DateTime                 @default(now()) @db.Timestamp(6)
-  updatedAt      DateTime                 @default(now()) @db.Timestamp(6)
-  applicantId    String?                  @db.Uuid
-  jobId          String?                  @db.Uuid
-  users          users?                   @relation(fields: [applicantId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_909867e55cc94e350ae38383cb5")
-  jobs           jobs?                    @relation(fields: [jobId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_f6ebb8bc5061068e4dd97df3c77")
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  password          String
+  firstName         String
+  lastName          String
+  role              UserRole @default(JOB_SEEKER)
+  company           String?
+  bio               String?
+  skills            String?
+  experience        String?
+  avatar            String?
+  resume            String?
+  location          String?
+  phone             String?
+  website           String?
+  education         String?
+  interests         String?
+  languages         String?
+  certifications    String?
+  projects          String?
+  linkedin          String?
+  github            String?
+  portfolio         String?
+  yearsOfExperience Int?
+  preferredWorkType String?
+  salaryExpectation String?
+  availability      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  jobsPosted        Job[]
+  applications      Application[]
+
+  @@map("users")
 }
 
-model jobs {
-  id           String         @id(map: "PK_cf0a6c42b72fcc7f7c237def345") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title        String         @db.VarChar
-  description  String
-  location     String?        @db.VarChar
-  salary       String?        @db.VarChar
-  createdAt    DateTime       @default(now()) @db.Timestamp(6)
-  updatedAt    DateTime       @default(now()) @db.Timestamp(6)
-  employerId   String?        @db.Uuid
-  applications applications[]
-  users        users?         @relation(fields: [employerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_62e3afafda3cf7db0a08982a5b1")
+model Job {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  location    String?
+  salary      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  employerId  String
+  employer    User         @relation(fields: [employerId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@map("jobs")
 }
 
-model users {
-  id                   String          @id(map: "PK_a3ffb1c0c8416b9fc6f907b7433") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  email                String          @unique(map: "UQ_97672ac88f789774dd47f7c8be3") @db.VarChar
-  password             String          @db.VarChar
-  firstName            String          @db.VarChar
-  lastName             String          @db.VarChar
-  role                 users_role_enum @default(job_seeker)
-  company              String?         @db.VarChar
-  bio                  String?
-  skills               String?
-  experience           String?         @db.VarChar
-  avatar               String?         @db.VarChar
-  resume               String?         @db.VarChar
-  location             String?         @db.VarChar
-  phone                String?         @db.VarChar
-  website              String?         @db.VarChar
-  education            String?         @db.VarChar
-  interests            String?
-  languages            String?
-  certifications       String?
-  projects             String?
-  linkedin             String?         @db.VarChar
-  github               String?         @db.VarChar
-  portfolio            String?         @db.VarChar
-  yearsOfExperience    Int?
-  preferredWorkType    String?         @db.VarChar
-  salaryExpectation    String?         @db.VarChar
-  availability         String?
-  createdAt            DateTime        @default(now()) @db.Timestamp(6)
-  updatedAt            DateTime        @default(now()) @db.Timestamp(6)
-  applications         applications[]
-  jobs                 jobs[]
+model Application {
+  id            String            @id @default(uuid())
+  coverLetter   String?
+  resumeFilename String?
+  resumeUrl     String?
+  status        ApplicationStatus @default(PENDING)
+  notes         String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  // Relations
+  applicantId   String
+  applicant     User @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  jobId         String
+  job           Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@map("applications")
 }
 
-enum applications_status_enum {
-  pending
-  reviewed
-  shortlisted
-  rejected
-  hired
+model Contact {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact")
 }
 
-enum users_role_enum {
-  job_seeker
-  employer
-  admin
+enum UserRole {
+  JOB_SEEKER
+  EMPLOYER
+  ADMIN
 }
+
+enum ApplicationStatus {
+  PENDING
+  REVIEWED
+  SHORTLISTED
+  REJECTED
+  HIRED
+} 

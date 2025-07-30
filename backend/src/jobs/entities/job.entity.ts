@@ -58,7 +58,7 @@ export class Job {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToOne(() => User, (user) => user.jobs, { eager: true })
+  @ManyToOne(() => User, (user) => user.jobsPosted, { eager: true })
   @JoinColumn({ name: 'postedBy' })
   postedBy: User;
 

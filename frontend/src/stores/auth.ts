@@ -14,6 +14,7 @@ interface AuthStore {
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   updateUser: (data: Partial<User>, avatar?: File, resume?: File) => Promise<void>;
+  deleteUser: () => Promise<void>;
   initializeAuth: () => void;
 }
 
@@ -92,6 +93,17 @@ export const useAuthStore = create<AuthStore>()(
           set({ user: response.data });
         } catch (error) {
           console.error('Failed to update user:', error);
+          throw error;
+        }
+      },
+
+      deleteUser: async () => {
+        try {
+          await api.delete('/users/me');
+          Cookies.remove('auth-token');
+          set({ user: null, isAuthenticated: false });
+        } catch (error) {
+          console.error('Failed to delete user:', error);
           throw error;
         }
       },

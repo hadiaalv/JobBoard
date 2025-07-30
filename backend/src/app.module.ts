@@ -29,8 +29,7 @@ import { Contact } from './contact/entities/contact.entity';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: [User, Job, Application, Contact],
-      migrations: ['src/migrations/*.ts'],
-      synchronize: false,
+      synchronize: true, // Enable for development - will create tables automatically
       logging: process.env.NODE_ENV === 'development',
     }),
     ThrottlerModule.forRoot({

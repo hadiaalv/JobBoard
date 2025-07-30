@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Patch, Param, UseGuards, Request, UseInterceptors, UploadedFiles, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, UseGuards, Request, UseInterceptors, UploadedFiles, BadRequestException } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -62,6 +62,20 @@ export class UsersController {
         message: 'Failed to update user profile',
         error: error.message,
         details: error.stack
+      });
+    }
+  }
+
+  @Delete('me')
+  @UseGuards(JwtAuthGuard)
+  async deleteMe(@Request() req) {
+    try {
+      await this.usersService.remove(req.user.id);
+      return { message: 'Profile deleted successfully' };
+    } catch (error) {
+      throw new BadRequestException({
+        message: 'Failed to delete user profile',
+        error: error.message
       });
     }
   }

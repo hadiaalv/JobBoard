@@ -129,6 +129,17 @@ export class UsersService {
     }
   }
 
+  async remove(id: string) {
+    try {
+      const user = await this.findOne(id);
+      await this.userRepository.remove(user);
+      return { message: 'User deleted successfully' };
+    } catch (error) {
+      console.error('UsersService: remove error:', error);
+      throw error;
+    }
+  }
+
   async findByEmail(email: string) {
     return this.userRepository.findOne({ where: { email } });
   }

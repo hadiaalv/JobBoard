@@ -103,7 +103,7 @@ export class User {
   availability?: string;
 
   @OneToMany(() => Job, (job) => job.postedBy, { cascade: true })
-  jobs: Job[];
+  jobsPosted: Job[];
 
   @OneToMany(() => Application, (application) => application.applicant, { cascade: true })
   applications: Application[];

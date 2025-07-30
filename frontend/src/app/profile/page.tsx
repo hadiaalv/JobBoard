@@ -26,14 +26,16 @@ import {
   Clock,
   Edit,
   Save,
-  X
+  X,
+  Trash2,
+  AlertTriangle
 } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, isAuthenticated, updateUser, editing, setEditing } = useAuthStore();
+  const { user, isAuthenticated, updateUser, deleteUser, editing, setEditing } = useAuthStore();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -55,9 +57,34 @@ export default function ProfilePage() {
     preferredWorkType: "",
     salaryExpectation: "",
     availability: "",
+    skills: [] as string[] | string,
+    experience: "",
   });
+
+  // Create a separate form object for PortfolioSection that matches its interface
+  const portfolioForm = {
+    skills: Array.isArray(form.skills) ? form.skills : (typeof form.skills === 'string' ? form.skills.split(',').map((s: string) => s.trim()).filter(Boolean) : []),
+    experience: form.experience || "",
+    education: form.education || "",
+    interests: form.interests || "",
+    languages: form.languages || "",
+    certifications: form.certifications || "",
+    projects: form.projects || "",
+    linkedin: form.linkedin || "",
+    github: form.github || "",
+    portfolio: form.portfolio || "",
+    yearsOfExperience: form.yearsOfExperience ? parseInt(form.yearsOfExperience) : undefined,
+    preferredWorkType: form.preferredWorkType || "",
+    salaryExpectation: form.salaryExpectation || "",
+    availability: form.availability || "",
+    location: form.location || "",
+    phone: form.phone || "",
+    website: form.website || "",
+  };
   const [avatar, setAvatar] = useState<File | null>(null);
   const [resume, setResume] = useState<File | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -87,6 +114,8 @@ export default function ProfilePage() {
         preferredWorkType: user.preferredWorkType || "",
         salaryExpectation: user.salaryExpectation || "",
         availability: user.availability || "",
+        skills: user.skills || [],
+        experience: user.experience || "",
       });
     }
   }, [user, isAuthenticated, router]);
@@ -163,7 +192,22 @@ export default function ProfilePage() {
         preferredWorkType: user.preferredWorkType || "",
         salaryExpectation: user.salaryExpectation || "",
         availability: user.availability || "",
+        skills: user.skills || [],
+        experience: user.experience || "",
       });
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteUser();
+      toast.success("Profile deleted successfully!");
+      router.push("/");
+    } catch (error) {
+      console.error("Failed to delete profile:", error);
+      toast.error("Failed to delete profile");
+      setIsDeleting(false);
     }
   };
 
@@ -202,7 +246,7 @@ export default function ProfilePage() {
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     console.error('Failed to load avatar:', user.avatar);
-                    console.error('Avatar URL attempted:', getAvatarUrl(user.avatar));
+                    console.error('Avatar URL attempted:', user.avatar ? getAvatarUrl(user.avatar) : 'No avatar');
                     e.currentTarget.style.display = 'none';
                     const parent = e.currentTarget.parentElement;
                     if (parent) {
@@ -210,7 +254,7 @@ export default function ProfilePage() {
                     }
                   }}
                   onLoad={() => {
-                    console.log('Avatar loaded successfully:', getAvatarUrl(user.avatar));
+                    console.log('Avatar loaded successfully:', user.avatar ? getAvatarUrl(user.avatar) : 'No avatar');
                   }}
                 />
               ) : (
@@ -343,12 +387,80 @@ export default function ProfilePage() {
 
       {user.role === 'job_seeker' && (
         <PortfolioSection 
-          form={form} 
+          form={portfolioForm} 
           onChange={handleChange} 
           onSkillsChange={handleSkillsChange}
           editing={editing}
         />
       )}
+
+      {/* Danger Zone */}
+      <Card className="border-red-200 bg-red-50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-red-700">
+            <AlertTriangle className="h-5 w-5" />
+            Danger Zone
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div>
+              <h3 className="text-lg font-semibold text-red-800 mb-2">Delete Profile</h3>
+              <p className="text-red-600 mb-4">
+                This action cannot be undone. This will permanently delete your profile, 
+                all your data, applications, and remove you from the platform.
+              </p>
+              
+              {!showDeleteConfirm ? (
+                <Button 
+                  variant="destructive" 
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="flex items-center gap-2 bg-red-600 hover:bg-red-700"
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Delete Profile
+                </Button>
+              ) : (
+                <div className="space-y-3 p-4 bg-red-100 rounded-lg border border-red-300">
+                  <p className="text-red-800 font-medium">
+                    Are you absolutely sure? This action cannot be undone.
+                  </p>
+                  <p className="text-red-700 text-sm">
+                    Please type <span className="font-mono font-bold">DELETE</span> to confirm.
+                  </p>
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="destructive" 
+                      onClick={handleDeleteProfile}
+                      disabled={isDeleting}
+                      className="flex items-center gap-2 bg-red-600 hover:bg-red-700"
+                    >
+                      {isDeleting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Deleting...
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="h-4 w-4" />
+                          Yes, Delete My Profile
+                        </>
+                      )}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowDeleteConfirm(false)}
+                      disabled={isDeleting}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
