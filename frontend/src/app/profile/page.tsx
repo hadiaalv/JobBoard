@@ -217,28 +217,28 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="max-w-4xl mx-auto py-12 px-4">
+      <div className="responsive-container py-8 sm:py-12">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
+          <div className="loading-spinner h-8 w-8 sm:h-12 sm:w-12 mx-auto"></div>
+          <p className="mt-4 responsive-text text-gray-600">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <Button variant="ghost" asChild className="mb-6">
+    <div className="responsive-container py-8 sm:py-12">
+      <Button variant="ghost" asChild className="mb-4 sm:mb-6 responsive-text-sm">
         <Link href="/dashboard">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Dashboard
         </Link>
       </Button>
 
-      <Card className="mb-8">
-        <CardContent className="p-8">
-          <div className="flex items-start gap-6">
-            <div className="w-32 h-32 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center text-4xl font-bold text-primary overflow-hidden">
+      <Card className="mb-6 sm:mb-8">
+        <CardContent className="p-4 sm:p-8">
+          <div className="responsive-flex items-start gap-4 sm:gap-6">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 border-2 border-primary flex items-center justify-center text-2xl sm:text-4xl font-bold text-primary overflow-hidden flex-shrink-0">
               {user?.avatar ? (
                 <img
                   src={getAvatarUrl(user.avatar)}
@@ -262,45 +262,45 @@ export default function ProfilePage() {
               )}
             </div>
             {editing && (
-              <label className="block text-gray-600 text-sm font-medium cursor-pointer">
+              <label className="block text-gray-600 responsive-text-sm font-medium cursor-pointer">
                 Avatar
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleAvatarChange}
-                  className="mt-2 block w-full text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
+                  className="mt-2 block w-full responsive-text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
                 />
               </label>
             )}
             {avatar && (
-              <p className="text-xs text-green-600">✓ {avatar.name}</p>
+              <p className="responsive-text-sm text-green-600">✓ {avatar.name}</p>
             )}
           </div>
 
-          <div className="flex-1 space-y-4 w-full">
-            <div className="flex gap-4">
+          <div className="flex-1 space-y-4 w-full mt-4 sm:mt-6">
+            <div className="responsive-grid-2 gap-4">
               <div className="flex-1">
-                <label className="block text-gray-700 mb-1">First Name</label>
+                <label className="block text-gray-700 mb-1 responsive-text-sm">First Name</label>
                 <input
                   type="text"
                   name="firstName"
                   value={form.firstName}
                   onChange={handleChange}
                   disabled={!editing}
-                  className={`w-full border border-gray-300 rounded px-4 py-2 ${
+                  className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
                     editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
                   }`}
                 />
               </div>
               <div className="flex-1">
-                <label className="block text-gray-700 mb-1">Last Name</label>
+                <label className="block text-gray-700 mb-1 responsive-text-sm">Last Name</label>
                 <input
                   type="text"
                   name="lastName"
                   value={form.lastName}
                   onChange={handleChange}
                   disabled={!editing}
-                  className={`w-full border border-gray-300 rounded px-4 py-2 ${
+                  className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
                     editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
                   }`}
                 />
@@ -308,25 +308,25 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-1">Email</label>
+              <label className="block text-gray-700 mb-1 responsive-text-sm">Email</label>
               <input
                 type="email"
                 name="email"
                 value={form.email}
                 disabled
-                className="w-full bg-gray-100 border border-gray-300 rounded px-4 py-2 opacity-70 cursor-not-allowed"
+                className="w-full bg-gray-100 border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm opacity-70 cursor-not-allowed"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-1">Bio</label>
+              <label className="block text-gray-700 mb-1 responsive-text-sm">Bio</label>
               <textarea
                 name="bio"
                 value={form.bio}
                 onChange={handleChange}
                 disabled={!editing}
                 placeholder="Tell us about yourself..."
-                className={`w-full border border-gray-300 rounded px-4 py-2 min-h-[60px] ${
+                className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 min-h-[60px] responsive-text-sm ${
                   editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
                 }`}
               />
@@ -334,15 +334,15 @@ export default function ProfilePage() {
 
             {user.role === 'job_seeker' && (
               <div>
-                <label className="block text-gray-700 mb-1">Resume</label>
+                <label className="block text-gray-700 mb-1 responsive-text-sm">Resume</label>
                 {user?.resume && !resume && (
                   <div className="mb-2 p-2 bg-gray-50 rounded border">
-                    <p className="text-sm text-gray-600">Current resume:</p>
+                    <p className="responsive-text-sm text-gray-600">Current resume:</p>
                     <a 
                       href={getDownloadUrl(user.resume)}
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-primary hover:underline text-sm"
+                      className="text-primary hover:underline responsive-text-sm"
                     >
                       View current resume
                     </a>
@@ -353,17 +353,15 @@ export default function ProfilePage() {
                     type="file"
                     accept=".pdf,.doc,.docx"
                     onChange={handleResumeChange}
-                    className="mt-2 block w-full text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
+                    className="mt-2 block w-full responsive-text-sm text-gray-500 file:bg-primary file:text-white file:rounded file:px-3 file:py-1 file:border-0 hover:file:bg-primary/90 transition-colors"
                   />
                 )}
                 {resume && (
-                  <p className="text-xs text-green-600">✓ {resume.name}</p>
+                  <p className="responsive-text-sm text-green-600">✓ {resume.name}</p>
                 )}
               </div>
             )}
           </div>
-
-
         </CardContent>
       </Card>
 
@@ -377,21 +375,21 @@ export default function ProfilePage() {
       )}
 
       {/* Profile Actions */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex justify-end gap-2">
+      <Card className="mb-4 sm:mb-6">
+        <CardContent className="p-4 sm:p-6">
+          <div className="responsive-flex justify-end gap-2">
             {!editing ? (
-              <Button onClick={handleEditClick} className="flex items-center gap-2">
+              <Button onClick={handleEditClick} className="flex items-center gap-2 responsive-text-sm">
                 <Edit className="h-4 w-4" />
                 Edit Profile
               </Button>
             ) : (
               <>
-                <Button variant="outline" onClick={handleCancelClick} className="flex items-center gap-2">
+                <Button variant="outline" onClick={handleCancelClick} className="flex items-center gap-2 responsive-text-sm">
                   <X className="h-4 w-4" />
                   Cancel
                 </Button>
-                <Button onClick={handleSubmit} className="flex items-center gap-2">
+                <Button onClick={handleSubmit} className="flex items-center gap-2 responsive-text-sm">
                   <Save className="h-4 w-4" />
                   Save Changes
                 </Button>
@@ -404,16 +402,16 @@ export default function ProfilePage() {
       {/* Danger Zone */}
       <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-red-700 dark:text-red-400">
+          <CardTitle className="flex items-center gap-2 text-red-700 dark:text-red-400 responsive-text-lg">
             <AlertTriangle className="h-5 w-5" />
             Danger Zone
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold text-red-800 dark:text-red-300 mb-2">Delete Profile</h3>
-              <p className="text-red-600 dark:text-red-400 mb-4">
+              <h3 className="responsive-text-lg font-semibold text-red-800 dark:text-red-300 mb-2">Delete Profile</h3>
+              <p className="responsive-text text-red-600 dark:text-red-400 mb-4">
                 This action cannot be undone. This will permanently delete your profile, 
                 all your data, applications, and remove you from the platform.
               </p>
@@ -422,22 +420,22 @@ export default function ProfilePage() {
                 <Button 
                   variant="destructive" 
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 responsive-text-sm"
                 >
                   <Trash2 className="h-4 w-4" />
                   Delete Profile
                 </Button>
               ) : (
-                <div className="space-y-3 p-4 bg-red-100 dark:bg-red-900/30 rounded-lg border border-red-300 dark:border-red-700">
-                  <p className="text-red-800 dark:text-red-200 font-medium">
+                <div className="space-y-3 p-3 sm:p-4 bg-red-100 dark:bg-red-900/30 rounded-lg border border-red-300 dark:border-red-700">
+                  <p className="responsive-text text-red-800 dark:text-red-200 font-medium">
                     Are you absolutely sure? This action cannot be undone.
                   </p>
-                  <div className="flex gap-2">
+                  <div className="responsive-flex gap-2">
                     <Button 
                       variant="destructive" 
                       onClick={handleDeleteProfile}
                       disabled={isDeleting}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 responsive-text-sm"
                     >
                       {isDeleting ? (
                         <>
@@ -455,7 +453,7 @@ export default function ProfilePage() {
                       variant="outline" 
                       onClick={() => setShowDeleteConfirm(false)}
                       disabled={isDeleting}
-                      className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 responsive-text-sm"
                     >
                       Cancel
                     </Button>

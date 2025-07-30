@@ -30,7 +30,7 @@ interface PortfolioSectionProps {
 export default function PortfolioSection({ form, editing, onChange, onSkillsChange }: PortfolioSectionProps) {
   const [skillInput, setSkillInput] = useState("");
 
-  // Helper function to ensure skills is always an array
+  
   const getSkillsArray = () => {
     if (Array.isArray(form.skills)) {
       return form.skills;
@@ -75,13 +75,13 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
   ];
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-gray-800 border-b pb-2">Portfolio & Professional Details</h3>
+    <div className="space-y-4 sm:space-y-6">
+      <h3 className="responsive-text-lg font-semibold text-gray-800 border-b pb-2">Portfolio & Professional Details</h3>
       
       {/* Contact Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="responsive-grid-2 gap-4">
         <div>
-          <label className="block text-gray-700 mb-1">Location</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Location</label>
           <input
             type="text"
             name="location"
@@ -89,13 +89,13 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             onChange={onChange}
             disabled={!editing}
             placeholder="City, Country"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1">Phone</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Phone</label>
           <input
             type="tel"
             name="phone"
@@ -103,7 +103,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             onChange={onChange}
             disabled={!editing}
             placeholder="+1 (555) 123-4567"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
@@ -111,7 +111,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
       </div>
 
       <div>
-        <label className="block text-gray-700 mb-1">Website</label>
+        <label className="block text-gray-700 mb-1 responsive-text-sm">Website</label>
         <input
           type="url"
           name="website"
@@ -119,7 +119,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
           onChange={onChange}
           disabled={!editing}
           placeholder="https://yourwebsite.com"
-          className={`w-full border border-gray-300 rounded px-4 py-2 ${
+          className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
             editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
           }`}
         />
@@ -127,22 +127,22 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
 
       {/* Skills Section */}
       <div>
-        <label className="block text-gray-700 mb-2">Skills</label>
+        <label className="block text-gray-700 mb-2 responsive-text-sm">Skills</label>
         {editing ? (
           <div className="space-y-2">
-            <div className="flex gap-2">
+            <div className="responsive-flex gap-2">
               <input
                 type="text"
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Add a skill (e.g., JavaScript, React, Python)"
-                className="flex-1 border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary"
+                className="flex-1 border border-gray-300 rounded px-3 sm:px-4 py-2 focus:ring-2 focus:ring-primary focus:border-primary responsive-text-sm"
               />
               <button
                 type="button"
                 onClick={handleAddSkill}
-                className="bg-primary text-white px-4 py-2 rounded hover:bg-primary/90 transition-colors"
+                className="bg-primary text-white px-3 sm:px-4 py-2 rounded hover:bg-primary/90 transition-colors responsive-text-sm"
               >
                 Add
               </button>
@@ -150,7 +150,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             {getSkillsArray().map((skill, index) => (
               <span
                 key={index}
-                className="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm flex items-center gap-1"
+                className="bg-primary/10 text-primary px-2 sm:px-3 py-1 rounded-full responsive-text-sm flex items-center gap-1"
               >
                 {skill}
                 <button
@@ -169,22 +169,22 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
               getSkillsArray().map((skill, index) => (
                 <span
                   key={index}
-                  className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
+                  className="bg-gray-100 text-gray-700 px-2 sm:px-3 py-1 rounded-full responsive-text-sm"
                 >
                   {skill}
                 </span>
               ))
             ) : (
-              <p className="text-gray-500 text-sm">No skills added yet</p>
+              <p className="responsive-text-sm text-gray-500">No skills added yet</p>
             )}
           </div>
         )}
       </div>
 
       {/* Experience & Education */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="responsive-grid-2 gap-4">
         <div>
-          <label className="block text-gray-700 mb-1">Years of Experience</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Years of Experience</label>
           <input
             type="number"
             name="yearsOfExperience"
@@ -194,19 +194,19 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             min="0"
             max="50"
             placeholder="5"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1">Preferred Work Type</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Preferred Work Type</label>
           <select
             name="preferredWorkType"
             value={form.preferredWorkType || ""}
             onChange={onChange}
             disabled={!editing}
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           >
@@ -221,7 +221,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
       </div>
 
       <div>
-        <label className="block text-gray-700 mb-1">Work Experience</label>
+        <label className="block text-gray-700 mb-1 responsive-text-sm">Work Experience</label>
         <textarea
           name="experience"
           value={form.experience || ""}
@@ -229,14 +229,14 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
           disabled={!editing}
           placeholder="Describe your work experience, roles, and achievements..."
           rows={3}
-          className={`w-full border border-gray-300 rounded px-4 py-2 ${
+          className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
             editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
           }`}
         />
       </div>
 
       <div>
-        <label className="block text-gray-700 mb-1">Education</label>
+        <label className="block text-gray-700 mb-1 responsive-text-sm">Education</label>
         <textarea
           name="education"
           value={form.education || ""}
@@ -244,16 +244,16 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
           disabled={!editing}
           placeholder="Your educational background, degrees, institutions..."
           rows={2}
-          className={`w-full border border-gray-300 rounded px-4 py-2 ${
+          className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
             editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
           }`}
         />
       </div>
 
       {/* Professional Links */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="responsive-grid-3 gap-4">
         <div>
-          <label className="block text-gray-700 mb-1">LinkedIn</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">LinkedIn</label>
           <input
             type="url"
             name="linkedin"
@@ -261,13 +261,13 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             onChange={onChange}
             disabled={!editing}
             placeholder="https://linkedin.com/in/yourprofile"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1">GitHub</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">GitHub</label>
           <input
             type="url"
             name="github"
@@ -275,13 +275,13 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             onChange={onChange}
             disabled={!editing}
             placeholder="https://github.com/yourusername"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1">Portfolio</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Portfolio</label>
           <input
             type="url"
             name="portfolio"
@@ -289,7 +289,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             onChange={onChange}
             disabled={!editing}
             placeholder="https://yourportfolio.com"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
@@ -297,9 +297,9 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
       </div>
 
       {/* Additional Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="responsive-grid-2 gap-4">
         <div>
-          <label className="block text-gray-700 mb-1">Languages</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Languages</label>
           <textarea
             name="languages"
             value={form.languages || ""}
@@ -307,13 +307,13 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             disabled={!editing}
             placeholder="Languages you speak (e.g., English, Spanish, French)"
             rows={2}
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1">Certifications</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Certifications</label>
           <textarea
             name="certifications"
             value={form.certifications || ""}
@@ -321,7 +321,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             disabled={!editing}
             placeholder="Professional certifications and licenses"
             rows={2}
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
@@ -329,7 +329,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
       </div>
 
       <div>
-        <label className="block text-gray-700 mb-1">Projects</label>
+        <label className="block text-gray-700 mb-1 responsive-text-sm">Projects</label>
         <textarea
           name="projects"
           value={form.projects || ""}
@@ -337,14 +337,14 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
           disabled={!editing}
           placeholder="Notable projects you've worked on, technologies used, outcomes..."
           rows={3}
-          className={`w-full border border-gray-300 rounded px-4 py-2 ${
+          className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
             editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
           }`}
         />
       </div>
 
       <div>
-        <label className="block text-gray-700 mb-1">Interests & Hobbies</label>
+        <label className="block text-gray-700 mb-1 responsive-text-sm">Interests & Hobbies</label>
         <textarea
           name="interests"
           value={form.interests || ""}
@@ -352,16 +352,16 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
           disabled={!editing}
           placeholder="Your interests, hobbies, and activities outside of work..."
           rows={2}
-          className={`w-full border border-gray-300 rounded px-4 py-2 ${
+          className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
             editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
           }`}
         />
       </div>
 
       {/* Career Preferences */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="responsive-grid-2 gap-4">
         <div>
-          <label className="block text-gray-700 mb-1">Salary Expectation</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Salary Expectation</label>
           <input
             type="text"
             name="salaryExpectation"
@@ -369,13 +369,13 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             onChange={onChange}
             disabled={!editing}
             placeholder="e.g., $60,000 - $80,000"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-1">Availability</label>
+          <label className="block text-gray-700 mb-1 responsive-text-sm">Availability</label>
           <input
             type="text"
             name="availability"
@@ -383,7 +383,7 @@ export default function PortfolioSection({ form, editing, onChange, onSkillsChan
             onChange={onChange}
             disabled={!editing}
             placeholder="e.g., Available immediately, 2 weeks notice"
-            className={`w-full border border-gray-300 rounded px-4 py-2 ${
+            className={`w-full border border-gray-300 rounded px-3 sm:px-4 py-2 responsive-text-sm ${
               editing ? "bg-white focus:ring-2 focus:ring-primary focus:border-primary" : "bg-gray-100"
             }`}
           />
