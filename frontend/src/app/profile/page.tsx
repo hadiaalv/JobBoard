@@ -363,7 +363,23 @@ export default function ProfilePage() {
             )}
           </div>
 
-          <div className="flex justify-end gap-2 mt-6">
+
+        </CardContent>
+      </Card>
+
+      {user.role === 'job_seeker' && (
+        <PortfolioSection 
+          form={portfolioForm} 
+          onChange={handleChange} 
+          onSkillsChange={handleSkillsChange}
+          editing={editing}
+        />
+      )}
+
+      {/* Profile Actions */}
+      <Card className="mb-6">
+        <CardContent className="p-6">
+          <div className="flex justify-end gap-2">
             {!editing ? (
               <Button onClick={handleEditClick} className="flex items-center gap-2">
                 <Edit className="h-4 w-4" />
@@ -384,15 +400,6 @@ export default function ProfilePage() {
           </div>
         </CardContent>
       </Card>
-
-      {user.role === 'job_seeker' && (
-        <PortfolioSection 
-          form={portfolioForm} 
-          onChange={handleChange} 
-          onSkillsChange={handleSkillsChange}
-          editing={editing}
-        />
-      )}
 
       {/* Danger Zone */}
       <Card className="border-red-200 bg-red-50">
