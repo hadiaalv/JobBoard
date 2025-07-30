@@ -402,9 +402,9 @@ export default function ProfilePage() {
       </Card>
 
       {/* Danger Zone */}
-      <Card className="border-red-200 bg-red-50">
+      <Card className="border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-red-700">
+          <CardTitle className="flex items-center gap-2 text-red-700 dark:text-red-400">
             <AlertTriangle className="h-5 w-5" />
             Danger Zone
           </CardTitle>
@@ -412,8 +412,8 @@ export default function ProfilePage() {
         <CardContent className="p-6">
           <div className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold text-red-800 mb-2">Delete Profile</h3>
-              <p className="text-red-600 mb-4">
+              <h3 className="text-lg font-semibold text-red-800 dark:text-red-300 mb-2">Delete Profile</h3>
+              <p className="text-red-600 dark:text-red-400 mb-4">
                 This action cannot be undone. This will permanently delete your profile, 
                 all your data, applications, and remove you from the platform.
               </p>
@@ -422,14 +422,14 @@ export default function ProfilePage() {
                 <Button 
                   variant="destructive" 
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="flex items-center gap-2 bg-red-600 hover:bg-red-700"
+                  className="flex items-center gap-2"
                 >
                   <Trash2 className="h-4 w-4" />
                   Delete Profile
                 </Button>
               ) : (
-                <div className="space-y-3 p-4 bg-red-100 rounded-lg border border-red-300">
-                  <p className="text-red-800 font-medium">
+                <div className="space-y-3 p-4 bg-red-100 dark:bg-red-900/30 rounded-lg border border-red-300 dark:border-red-700">
+                  <p className="text-red-800 dark:text-red-200 font-medium">
                     Are you absolutely sure? This action cannot be undone.
                   </p>
                   <div className="flex gap-2">
@@ -437,7 +437,7 @@ export default function ProfilePage() {
                       variant="destructive" 
                       onClick={handleDeleteProfile}
                       disabled={isDeleting}
-                      className="flex items-center gap-2 bg-red-600 hover:bg-red-700"
+                      className="flex items-center gap-2"
                     >
                       {isDeleting ? (
                         <>
@@ -455,6 +455,7 @@ export default function ProfilePage() {
                       variant="outline" 
                       onClick={() => setShowDeleteConfirm(false)}
                       disabled={isDeleting}
+                      className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                     >
                       Cancel
                     </Button>
