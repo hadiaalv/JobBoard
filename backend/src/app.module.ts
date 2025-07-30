@@ -25,10 +25,11 @@ import { Contact } from './contact/entities/contact.entity';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
+      url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/jobboard',
       entities: [User, Job, Application, Contact],
-      synchronize:true,
+      synchronize: false, // Disable for now to avoid migration issues
       logging: process.env.NODE_ENV === 'development',
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
     ThrottlerModule.forRoot({
       ttl: 60,      

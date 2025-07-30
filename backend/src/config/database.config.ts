@@ -6,8 +6,9 @@ import { Contact } from '../contact/entities/contact.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  url: process.env.DATABASE_URL,
+  url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/jobboard',
   entities: [User, Job, Application, Contact],
-  synchronize: true, // Enable for development
+  synchronize: false, // Disable for now to avoid migration issues
   logging: process.env.NODE_ENV === 'development',
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 }); 

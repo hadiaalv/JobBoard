@@ -17,6 +17,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:db": "node test-db.js",
+    "setup:db": "node setup-db.js",
     "db:reset": "npm run build && node -e \"require('./dist/config/database.config.js').AppDataSource.initialize().then(() => console.log('Database connected!')).catch(console.error)\""
   },
   "dependencies": {

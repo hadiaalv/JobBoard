@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -131,6 +131,9 @@ export class UsersService {
 
   async remove(id: string) {
     try {
+      console.log('Starting user deletion for ID:', id);
+      
+      
       const user = await this.userRepository.findOne({
         where: { id },
         relations: ['jobsPosted', 'applications']
@@ -140,21 +143,64 @@ export class UsersService {
         throw new NotFoundException('User not found');
       }
 
-      // Delete related data first
+      console.log('Found user:', { id: user.id, email: user.email, role: user.role });
+
+      
       if (user.jobsPosted && user.jobsPosted.length > 0) {
-        await this.userRepository.manager.remove(user.jobsPosted);
+        console.log('Deleting', user.jobsPosted.length, 'jobs posted by user');
+        for (const job of user.jobsPosted) {
+          await this.userRepository.manager.remove(job);
+        }
       }
 
       if (user.applications && user.applications.length > 0) {
-        await this.userRepository.manager.remove(user.applications);
+        console.log('Deleting', user.applications.length, 'applications by user');
+        for (const application of user.applications) {
+          await this.userRepository.manager.remove(application);
+        }
       }
 
-      // Now delete the user
+      console.log('Deleting user from database');
       await this.userRepository.remove(user);
+      
+      console.log('User deleted successfully');
       return { message: 'User deleted successfully' };
     } catch (error) {
       console.error('UsersService: remove error:', error);
-      throw error;
+      
+     
+      if (error.code === '23503' || error.message.includes('foreign key')) {
+        console.log('Foreign key constraint error, trying alternative deletion method');
+        
+        try {
+          
+          await this.userRepository.query('DELETE FROM applications WHERE "applicantId" = $1', [id]);
+       
+          await this.userRepository.query(`
+            DELETE FROM applications 
+            WHERE "jobId" IN (SELECT id FROM jobs WHERE "postedBy" = $1)
+          `, [id]);
+          
+          await this.userRepository.query('DELETE FROM jobs WHERE "postedBy" = $1', [id]);
+          
+         
+          await this.userRepository.query('DELETE FROM users WHERE id = $1', [id]);
+          
+          console.log('User deleted using raw SQL');
+          return { message: 'User deleted successfully' };
+        } catch (sqlError) {
+          console.error('SQL deletion also failed:', sqlError);
+          throw new BadRequestException({
+            message: 'Failed to delete user due to database constraints',
+            error: sqlError.message
+          });
+        }
+      }
+      
+      throw new BadRequestException({
+        message: 'Failed to delete user profile',
+        error: error.message
+      });
     }
   }
 
