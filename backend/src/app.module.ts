@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -14,7 +13,6 @@ import { ApplicationsModule } from './applications/applications.module';
 import { ContactModule } from './contact/contact.module';
 import { UploadModule } from './upload/upload.module';
 import { MailModule } from './mail/mail.module';
-
 import { User } from './users/entities/user.entity';
 import { Job } from './jobs/entities/job.entity';
 import { Application } from './applications/entities/application.entity';
@@ -29,7 +27,7 @@ import { Contact } from './contact/entities/contact.entity';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: [User, Job, Application, Contact],
-      synchronize: true, // Enable for development - will create tables automatically
+      synchronize:true,
       logging: process.env.NODE_ENV === 'development',
     }),
     ThrottlerModule.forRoot({
@@ -52,4 +50,6 @@ import { Contact } from './contact/entities/contact.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+
+}

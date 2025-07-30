@@ -70,12 +70,16 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   async deleteMe(@Request() req) {
     try {
-      await this.usersService.remove(req.user.id);
+      console.log('Attempting to delete user:', req.user.id);
+      const result = await this.usersService.remove(req.user.id);
+      console.log('User deleted successfully:', req.user.id);
       return { message: 'Profile deleted successfully' };
     } catch (error) {
+      console.error('Delete user error:', error);
       throw new BadRequestException({
         message: 'Failed to delete user profile',
-        error: error.message
+        error: error.message,
+        details: error.stack
       });
     }
   }
@@ -89,6 +93,7 @@ export class UsersController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   getMe(@Request() req) {
+    console.log('Get me called for user:', req.user.id);
     return this.usersService.findOne(req.user.id);
   }
 
