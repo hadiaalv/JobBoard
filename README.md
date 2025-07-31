@@ -118,7 +118,7 @@ FRONTEND_URL="http://localhost:3001"
 UPLOAD_DEST="./uploads"
 MAX_FILE_SIZE=5242880
 
-# Email Configuration (Optional)
+# Email Configuration 
 SMTP_HOST="smtp.gmail.com"
 SMTP_PORT=587
 SMTP_SECURE=false
