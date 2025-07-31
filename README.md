@@ -11,6 +11,7 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 - Profile management with skills and experience
 - Real-time notifications
 
+
 ### For Employers
 - Post and manage job listings
 - Review applications
@@ -23,7 +24,7 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 - Role-based access control
 - File upload (resumes, avatars)
 - Email notifications
-- Real-time updates
+- Real-time notifications
 - Responsive design
 - TypeScript support
 
@@ -44,7 +45,8 @@ A modern job board platform built with NestJS (backend) and Next.js (frontend) s
 - **HTTP Client**: Axios
 - **Forms**: React Hook Form
 - **UI Components**: Shadcn/ui
-- **Notifications**: React Hot Toast
+- **Notifications**: Real-time notification system
+
 
 ##  Prerequisites
 
@@ -162,6 +164,19 @@ NEXT_PUBLIC_APP_URL="http://localhost:3001"
 - updatedAt (TIMESTAMP)
 ```
 
+### Notifications Table
+```sql
+- id (INTEGER, Primary Key)
+- type (ENUM: job_posted, application_submitted, etc.)
+- title (VARCHAR)
+- message (TEXT)
+- data (JSONB, Optional)
+- status (ENUM: unread, read)
+- recipient_id (INTEGER, Foreign Key to Users)
+- createdAt (TIMESTAMP)
+- updatedAt (TIMESTAMP)
+```
+
 ### Jobs Table
 ```sql
 - id (UUID, Primary Key)
@@ -211,6 +226,7 @@ job-board/
 │   │   ├── applications/   # Application management
 │   │   ├── mail/           # Email service
 │   │   ├── upload/         # File upload service
+│   │   ├── notifications/  # Notification system
 │   │   └── common/         # Shared utilities
 │   ├── prisma/             # Database schema
 │   └── uploads/            # File storage

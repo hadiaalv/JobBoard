@@ -24,7 +24,6 @@ import {
   Mail
 } from "lucide-react";
 import Link from "next/link";
-import toast from "react-hot-toast";
 
 export default function JobApplicationsPage() {
   const params = useParams();
@@ -63,7 +62,7 @@ export default function JobApplicationsPage() {
       setApplications(applicationsResponse.data);
     } catch (error) {
       console.error("Failed to fetch data:", error);
-      toast.error("Failed to load applications");
+      alert("Failed to load applications");
     } finally {
       setLoading(false);
     }
@@ -75,11 +74,11 @@ export default function JobApplicationsPage() {
         status,
         notes,
       });
-      toast.success("Application status updated");
+      alert("Application status updated");
       fetchJobAndApplications();
     } catch (error) {
       console.error("Failed to update status:", error);
-      toast.error("Failed to update application status");
+      alert("Failed to update application status");
     }
   };
 
@@ -307,7 +306,7 @@ export default function JobApplicationsPage() {
 
       {filteredApplications.length === 0 ? (
         <Card>
-          <CardContent className="text-center py-12">
+          <CardContent className="p-8 text-center">
             <FileText className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
               {filter === "all" ? "No applications yet" : `No ${filter} applications`}
@@ -379,14 +378,14 @@ export default function JobApplicationsPage() {
                         size="sm"
                         onClick={() => {
                           if (!application.resumeUrl) {
-                            toast.error('Resume file not available');
+                            alert('Resume file not available');
                             return;
                           }
                           
                           const url = getDownloadUrl(application.resumeUrl);
                           
                           if (!url) {
-                            toast.error('Resume file not available');
+                            alert('Resume file not available');
                             return;
                           }
                           
@@ -395,12 +394,12 @@ export default function JobApplicationsPage() {
                               if (response.ok) {
                                 window.open(url, '_blank');
                               } else {
-                                toast.error(`Resume file not found (${response.status})`);
+                                alert(`Resume file not found (${response.status})`);
                               }
                             })
                             .catch(error => {
                               console.error('Error accessing file:', error);
-                              toast.error(`Error accessing resume file: ${error.message}`);
+                              alert(`Error accessing resume file: ${error.message}`);
                             });
                         }}
                       >

@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-// Simple function to get cookie value
+// Helper function to get authentication token from cookies
 function getCookie(name: string): string | undefined {
   if (typeof document === 'undefined') return undefined;
   
@@ -15,7 +15,6 @@ class SocketService {
   private isConnecting = false;
 
   connect(token?: string) {
-    // Only run on client side
     if (typeof window === 'undefined') {
       return null;
     }
@@ -34,7 +33,6 @@ class SocketService {
 
     try {
       if (typeof io === 'undefined') {
-        console.error('Socket.io-client not available');
         this.isConnecting = false;
         return null;
       }
@@ -55,7 +53,6 @@ class SocketService {
         reconnectionDelayMax: 5000,
       });
     } catch (error) {
-      console.error('Error creating socket connection:', error);
       this.isConnecting = false;
       return null;
     }
@@ -65,14 +62,12 @@ class SocketService {
         this.isConnecting = false;
       });
 
-      this.socket.on('disconnect', (reason) => {
+      this.socket.on('disconnect', () => {
         this.isConnecting = false;
       });
 
-      this.socket.on('connect_error', (error) => {
-        console.error('Socket connection error:', error);
+      this.socket.on('connect_error', () => {
         this.isConnecting = false;
-        // Retry connection after a delay
         setTimeout(() => {
           if (!this.socket?.connected) {
             this.connect(token);
@@ -80,34 +75,25 @@ class SocketService {
         }, 5000);
       });
 
-      this.socket.on('error', (error) => {
-        console.error('Socket error:', error);
+      this.socket.on('error', () => {
       });
 
-      // Add authentication success/failure listeners
       this.socket.on('authenticated', () => {
-        // Authentication successful
       });
 
-      this.socket.on('unauthorized', (error) => {
-        console.error('Socket authentication failed:', error);
+      this.socket.on('unauthorized', () => {
       });
 
-      // Add reconnection listeners
-      this.socket.on('reconnect', (attemptNumber) => {
-        // Reconnected successfully
+      this.socket.on('reconnect', () => {
       });
 
-      this.socket.on('reconnect_attempt', (attemptNumber) => {
-        // Reconnection attempt
+      this.socket.on('reconnect_attempt', () => {
       });
 
-      this.socket.on('reconnect_error', (error) => {
-        console.error('Socket reconnection error:', error);
+      this.socket.on('reconnect_error', () => {
       });
 
       this.socket.on('reconnect_failed', () => {
-        console.error('Socket reconnection failed after all attempts');
       });
     }
 
@@ -115,7 +101,6 @@ class SocketService {
   }
 
   disconnect() {
-    // Only run on client side
     if (typeof window === 'undefined') {
       return;
     }
@@ -136,7 +121,6 @@ class SocketService {
     return this.socket?.connected || false;
   }
 
-  // Join a room
   joinRoom(room: string) {
     if (typeof window === 'undefined') return;
     if (this.socket?.connected) {
@@ -144,7 +128,6 @@ class SocketService {
     }
   }
 
-  // Leave a room
   leaveRoom(room: string) {
     if (typeof window === 'undefined') return;
     if (this.socket?.connected) {
@@ -152,7 +135,6 @@ class SocketService {
     }
   }
 
-  // Listen to events
   on(event: string, callback: (data: any) => void) {
     if (typeof window === 'undefined') return;
     if (this.socket) {
@@ -160,7 +142,6 @@ class SocketService {
     }
   }
 
-  // Remove event listener
   off(event: string, callback?: (data: any) => void) {
     if (typeof window === 'undefined') return;
     if (this.socket) {

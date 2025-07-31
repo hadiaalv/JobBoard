@@ -30,7 +30,6 @@ function decodeJWT(token: string) {
     }).join(''));
     return JSON.parse(jsonPayload);
   } catch (error) {
-    console.error('Error decoding JWT:', error);
     return null;
   }
 }
@@ -60,7 +59,6 @@ export function middleware(request: NextRequest) {
         pathname.startsWith(route)
       );
       if (isEmployerRoute && userRole !== 'employer') {
-        console.log(`Access denied: ${userRole} trying to access employer route ${pathname}`);
         return NextResponse.redirect(new URL('/dashboard', request.url));
       }
       
@@ -69,7 +67,6 @@ export function middleware(request: NextRequest) {
         pathname.startsWith(route)
       );
       if (isJobSeekerRoute && userRole !== 'job_seeker') {
-        console.log(`Access denied: ${userRole} trying to access job seeker route ${pathname}`);
         return NextResponse.redirect(new URL('/dashboard', request.url));
       }
     }

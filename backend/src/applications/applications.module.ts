@@ -6,18 +6,17 @@ import { Application } from './entities/application.entity';
 import { Job } from '../jobs/entities/job.entity';
 import { MailModule } from '../mail/mail.module';
 import { UploadModule } from '../upload/upload.module';
-import { NotificationsGateway } from '../notifications/notifications.gateway';
-import { JwtModule } from '@nestjs/jwt';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Application, Job]),
     MailModule,
     UploadModule,
-    JwtModule,
+    NotificationsModule,
   ],
   controllers: [ApplicationsController],
-  providers: [ApplicationsService, NotificationsGateway],
+  providers: [ApplicationsService],
   exports: [ApplicationsService],
 })
 export class ApplicationsModule {}

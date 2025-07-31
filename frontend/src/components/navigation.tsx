@@ -17,6 +17,7 @@ import {
   Moon,
   Sun
 } from 'lucide-react'
+
 import RealTimeNotifications from './real-time-notifications'
 import { useState, useEffect } from 'react'
 
@@ -209,10 +210,10 @@ export function Navigation() {
               })}
               
               {isAuthenticated ? (
-                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-1">
-                  <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 font-medium bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg">
-                    Welcome, {user?.firstName}!
-                  </div>
+                              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-1">
+                <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400 font-medium bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg">
+                  Welcome, {user?.firstName}!
+                </div>
                   <Link
                     href="/profile"
                     className="flex items-center px-3 py-2 text-base font-medium text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-900/20 dark:hover:to-blue-800/20 rounded-lg transition-all duration-300 transform hover:scale-105"

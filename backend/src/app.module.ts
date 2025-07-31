@@ -20,6 +20,7 @@ import { Job } from './jobs/entities/job.entity';
 import { Application } from './applications/entities/application.entity';
 import { Contact } from './contact/entities/contact.entity';
 import { JobFavorite } from './job-favorites/entities/job-favorite.entity';
+import { Notification } from './notifications/entities/notification.entity';
 
 @Module({
   imports: [
@@ -29,8 +30,8 @@ import { JobFavorite } from './job-favorites/entities/job-favorite.entity';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/jobboard',
-      entities: [User, Job, Application, Contact, JobFavorite],
-      synchronize: false, // Disable for now to avoid migration issues
+      entities: [User, Job, Application, Contact, JobFavorite, Notification],
+      synchronize: true,
       logging: process.env.NODE_ENV === 'development',
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),

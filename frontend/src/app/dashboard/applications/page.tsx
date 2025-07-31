@@ -7,9 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import api from "@/lib/api";
 import { Application } from "@/types";
-import { Building, MapPin, DollarSign, Calendar, Clock, Eye, CheckCircle, XCircle } from "lucide-react";
+import { 
+  Building, 
+  MapPin, 
+  Calendar, 
+  FileText, 
+  Eye, 
+  Clock, 
+  CheckCircle, 
+  XCircle 
+} from "lucide-react";
 import Link from "next/link";
-import toast from "react-hot-toast";
 
 export default function ApplicationsPage() {
   const router = useRouter();
@@ -38,7 +46,7 @@ export default function ApplicationsPage() {
       setApplications(response.data);
     } catch (error) {
       console.error("Failed to fetch applications:", error);
-      toast.error("Failed to load applications");
+      alert("Failed to load applications");
     } finally {
       setLoading(false);
     }
@@ -103,7 +111,7 @@ export default function ApplicationsPage() {
     return (
       <div className="max-w-6xl mx-auto py-12 px-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-300">Loading applications...</p>
         </div>
       </div>
@@ -245,7 +253,6 @@ export default function ApplicationsPage() {
                     
                     {application.job.salaryMin && application.job.salaryMax && (
                       <div className="flex items-center text-green-600 dark:text-green-400 font-medium mb-2">
-                        <DollarSign className="h-4 w-4 mr-2" />
                         <span>${application.job.salaryMin.toLocaleString()} - ${application.job.salaryMax.toLocaleString()}</span>
                       </div>
                     )}

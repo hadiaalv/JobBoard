@@ -38,8 +38,6 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      console.warn('Failed to fetch user with extended fields, trying basic fields:', error.message);
-      
       const user = await this.userRepository.findOne({
         where: { id },
         select: ['id', 'email', 'firstName', 'lastName', 'role', 'company', 'bio', 'skills', 'experience', 'createdAt'],
@@ -81,7 +79,6 @@ export class UsersService {
       const result = await this.userRepository.save(user);
       return result;
     } catch (error) {
-      console.error('UsersService: update error:', error);
       throw error;
     }
   }
@@ -124,14 +121,12 @@ export class UsersService {
       const result = await this.userRepository.save(user);
       return result;
     } catch (error) {
-      console.error('UsersService: updateWithFiles error:', error);
       throw error;
     }
   }
 
   async remove(id: string) {
     try {
-      console.log('Starting user deletion for ID:', id);
       
       
       const user = await this.userRepository.findOne({
@@ -143,53 +138,32 @@ export class UsersService {
         throw new NotFoundException('User not found');
       }
 
-      console.log('Found user:', { id: user.id, email: user.email, role: user.role });
-
-      
       if (user.jobsPosted && user.jobsPosted.length > 0) {
-        console.log('Deleting', user.jobsPosted.length, 'jobs posted by user');
         for (const job of user.jobsPosted) {
           await this.userRepository.manager.remove(job);
         }
       }
 
       if (user.applications && user.applications.length > 0) {
-        console.log('Deleting', user.applications.length, 'applications by user');
         for (const application of user.applications) {
           await this.userRepository.manager.remove(application);
         }
       }
 
-      console.log('Deleting user from database');
       await this.userRepository.remove(user);
-      
-      console.log('User deleted successfully');
       return { message: 'User deleted successfully' };
     } catch (error) {
-      console.error('UsersService: remove error:', error);
-      
-     
       if (error.code === '23503' || error.message.includes('foreign key')) {
-        console.log('Foreign key constraint error, trying alternative deletion method');
-        
         try {
-          
           await this.userRepository.query('DELETE FROM applications WHERE "applicantId" = $1', [id]);
-       
           await this.userRepository.query(`
             DELETE FROM applications 
             WHERE "jobId" IN (SELECT id FROM jobs WHERE "postedBy" = $1)
           `, [id]);
-          
           await this.userRepository.query('DELETE FROM jobs WHERE "postedBy" = $1', [id]);
-          
-         
           await this.userRepository.query('DELETE FROM users WHERE id = $1', [id]);
-          
-          console.log('User deleted using raw SQL');
           return { message: 'User deleted successfully' };
         } catch (sqlError) {
-          console.error('SQL deletion also failed:', sqlError);
           throw new BadRequestException({
             message: 'Failed to delete user due to database constraints',
             error: sqlError.message

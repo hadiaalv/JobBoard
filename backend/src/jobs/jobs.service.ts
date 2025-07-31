@@ -10,14 +10,15 @@ import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { FilterJobsDto } from './dto/filter-jobs.dto';
 import { User } from '../users/entities/user.entity';
-import { NotificationsGateway } from '../notifications/notifications.gateway';
+import { NotificationEventsService } from '../notifications/notification-events.service';
+
 
 @Injectable()
 export class JobsService {
   constructor(
     @InjectRepository(Job)
     private readonly jobRepository: Repository<Job>,
-    private readonly notificationsGateway: NotificationsGateway,
+    private readonly notificationEventsService: NotificationEventsService,
   ) {}
 
   async create(createJobDto: CreateJobDto, user: User) {
@@ -27,15 +28,25 @@ export class JobsService {
     });
     const savedJob = await this.jobRepository.save(job);
     
-    // Send real-time notification for new job
-    this.notificationsGateway.sendNewJob({
-      id: savedJob.id,
-      title: savedJob.title,
-      company: savedJob.company,
-      location: savedJob.location,
-      type: savedJob.type,
-      createdAt: savedJob.createdAt,
-    });
+    try {
+      const jobSeekers = await this.jobRepository.query(
+        'SELECT id FROM users WHERE role = $1',
+        ['job_seeker']
+      );
+      
+      if (jobSeekers.length > 0) {
+        const recipientIds = jobSeekers.map(seeker => seeker.id);
+        await this.notificationEventsService.notifyNewJobPosted({
+          id: savedJob.id,
+          title: savedJob.title,
+          company: savedJob.company,
+          location: savedJob.location,
+          recipientIds,
+        });
+      }
+    } catch (error) {
+      console.error('Failed to send job notification:', error);
+    }
     
     return savedJob;
   }
@@ -110,19 +121,15 @@ export class JobsService {
     }
 
     if (urgent) {
-      // Jobs posted in the last 7 days could be considered urgent
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
       query.andWhere('job.createdAt >= :urgent', { urgent: sevenDaysAgo });
     }
 
-    // Get total count for pagination
     const total = await query.getCount();
 
-    // Apply sorting
     query.orderBy(`job.${sortBy}`, sortOrder as 'ASC' | 'DESC');
 
-    // Apply pagination
     const offset = (page - 1) * limit;
     query.skip(offset).take(limit);
 
@@ -167,17 +174,6 @@ export class JobsService {
 
     Object.assign(job, updateJobDto);
     const updatedJob = await this.jobRepository.save(job);
-    
-    // Send real-time notification for job update
-    this.notificationsGateway.sendJobUpdate(id, {
-      id: updatedJob.id,
-      title: updatedJob.title,
-      company: updatedJob.company,
-      location: updatedJob.location,
-      type: updatedJob.type,
-      updatedAt: updatedJob.updatedAt,
-    });
-    
     return updatedJob;
   }
 
@@ -189,10 +185,6 @@ export class JobsService {
     }
 
     await this.jobRepository.remove(job);
-    
-    // Send real-time notification for job deletion
-    this.notificationsGateway.sendToAll('job_deleted', { id });
-    
     return { message: 'Job deleted successfully' };
   }
 }

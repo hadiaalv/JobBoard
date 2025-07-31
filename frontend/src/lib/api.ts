@@ -10,14 +10,12 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = Cookies.get('auth-token');
-    console.log('API: Request to', config.url, 'with token:', token ? 'present' : 'missing');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
   (error) => {
-    console.error('API: Request error:', error);
     return Promise.reject(error);
   }
 );
@@ -25,19 +23,21 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => {
-    console.log('API: Response from', response.config.url, 'status:', response.status);
     return response;
   },
   (error) => {
-    console.error('API: Response error from', error.config?.url, 'status:', error.response?.status, error.response?.data);
     if (error.response?.status === 401) {
       Cookies.remove('auth-token');
       Cookies.remove('user');
       window.location.href = '/auth/login';
     }
     
-    const message = error.response?.data?.message || 'An error occurred';
-    toast.error(message);
+    if (error.response) {
+      const message = error.response?.data?.message || 'An error occurred';
+      toast.error(message);
+    } else if (error.code === 'NETWORK_ERROR' || error.message === 'Network Error') {
+      console.warn('Network error detected. Please check your connection and ensure the backend server is running.');
+    }
     
     return Promise.reject(error);
   }

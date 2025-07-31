@@ -12,9 +12,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuthStore } from "@/stores/auth";
 import api from "@/lib/api";
-import toast from "react-hot-toast";
 import { ArrowLeft, Plus, X } from "lucide-react";
 import Link from "next/link";
+
 const jobSchema = z.object({
   title: z.string().min(1, "Job title is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
@@ -89,7 +89,7 @@ export default function CreateJobPage() {
 
   const onSubmit = async (data: JobFormData) => {
     if (salaryMin && salaryMax && salaryMin > salaryMax) {
-      toast.error("Minimum salary cannot be greater than maximum salary");
+      alert("Minimum salary cannot be greater than maximum salary");
       return;
     }
 
@@ -105,11 +105,11 @@ export default function CreateJobPage() {
       };
 
       await api.post("/jobs", jobData);
-      toast.success("Job posted successfully!");
+      alert("Job posted successfully!");
       router.push("/dashboard/jobs");
     } catch (error: any) {
       console.error("Failed to create job:", error);
-      toast.error(error.response?.data?.message || "Failed to create job");
+      alert(error.response?.data?.message || "Failed to create job");
     } finally {
       setLoading(false);
     }

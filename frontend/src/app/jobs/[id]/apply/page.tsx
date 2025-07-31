@@ -15,7 +15,7 @@ import api from "@/lib/api";
 import { Job } from "@/types";
 import { MapPin, DollarSign, Building, Calendar, ArrowLeft, Upload, FileText } from "lucide-react";
 import Link from "next/link";
-import toast from "react-hot-toast";
+
 const applicationSchema = z.object({
   coverLetter: z.string().min(50, "Cover letter must be at least 50 characters").max(2000, "Cover letter must be less than 2000 characters"),
 });
@@ -64,7 +64,7 @@ export default function JobApplicationPage() {
       setJob(response.data);
     } catch (error) {
       console.error("Failed to fetch job:", error);
-      toast.error("Failed to load job details");
+      alert("Failed to load job details");
     } finally {
       setLoading(false);
     }
@@ -87,11 +87,11 @@ export default function JobApplicationPage() {
     const file = event.target.files?.[0];
     if (file) {
       if (file.type !== "application/pdf") {
-        toast.error("Please upload a PDF file");
+        alert("Please upload a PDF file");
         return;
       }
       if (file.size > 5 * 1024 * 1024) {
-        toast.error("File size must be less than 5MB");
+        alert("File size must be less than 5MB");
         return;
       }
       setResumeFile(file);
@@ -100,7 +100,7 @@ export default function JobApplicationPage() {
 
   const onSubmit = async (data: ApplicationFormData) => {
     if (!resumeFile) {
-      toast.error("Please upload your resume");
+      alert("Please upload your resume");
       return;
     }
 
@@ -125,13 +125,13 @@ export default function JobApplicationPage() {
         },
       });
 
-      toast.success("Application submitted successfully!");
+      alert("Application submitted successfully!");
       router.push("/dashboard/applications");
     } catch (error: any) {
       console.error("Failed to submit application:", error);
       console.error("Error response:", error.response?.data);
       console.error("Error status:", error.response?.status);
-      toast.error(error.response?.data?.message || "Failed to submit application");
+      alert(error.response?.data?.message || "Failed to submit application");
     } finally {
       setSubmitting(false);
     }

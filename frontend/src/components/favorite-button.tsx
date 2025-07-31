@@ -29,7 +29,6 @@ export default function FavoriteButton({ jobId, className = "", size = "sm" }: F
       const response = await api.get(`/job-favorites/${jobId}/check`);
       setIsFavorited(response.data.isFavorited);
     } catch (error) {
-      // Silently fail - user might not be authenticated
     }
   };
 

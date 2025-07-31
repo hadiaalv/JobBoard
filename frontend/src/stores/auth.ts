@@ -34,7 +34,6 @@ export const useAuthStore = create<AuthStore>()(
           const { user, token, access_token } = response.data;
           const authToken = token || access_token;
           Cookies.set('auth-token', authToken, { expires: 7, path: '/' });
-          console.log('Token after login:', Cookies.get('auth-token'));
           set({ user, isAuthenticated: true, isLoading: false });
         } catch (error) {
           set({ isLoading: false });
@@ -92,7 +91,6 @@ export const useAuthStore = create<AuthStore>()(
           
           set({ user: response.data });
         } catch (error) {
-          console.error('Failed to update user:', error);
           throw error;
         }
       },
@@ -103,7 +101,6 @@ export const useAuthStore = create<AuthStore>()(
           Cookies.remove('auth-token');
           set({ user: null, isAuthenticated: false });
         } catch (error) {
-          console.error('Failed to delete user:', error);
           throw error;
         }
       },

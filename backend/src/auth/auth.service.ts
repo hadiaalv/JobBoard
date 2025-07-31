@@ -1,6 +1,7 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { MailService } from '../mail/mail.service';
+import { NotificationEventsService } from '../notifications/notification-events.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../users/entities/user.entity';
@@ -11,22 +12,20 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private mailService: MailService
+    private mailService: MailService,
+    private notificationEventsService: NotificationEventsService
   ) {}
 
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
-      console.error('User not found for email:', email);
       return null;
     }
     if (!user.password) {
-      console.error('User found but password is missing:', user);
       return null;
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      console.error('Password mismatch for user:', email);
       return null;
     }
     return user;
@@ -55,9 +54,27 @@ export class AuthService {
       });
       
       this.mailService.sendRegistrationEmail(user.email, user.firstName)
-        .catch(error => {
-          console.log('Email sending failed (non-critical):', error.message);
+        .catch(() => {
+          // Handle email sending failure silently
         });
+
+      // Send welcome notifications
+      try {
+        await this.notificationEventsService.notifyRegistrationConfirmed({
+          id: user.id,
+          name: user.firstName,
+          email: user.email,
+          role: user.role,
+        });
+
+        await this.notificationEventsService.notifyWelcomeMessage({
+          id: user.id,
+          name: user.firstName,
+          role: user.role,
+        });
+      } catch (error) {
+        console.error('Failed to send welcome notifications:', error);
+      }
       
       return this.login(user);
     } catch (error) {
